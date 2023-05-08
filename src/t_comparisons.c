@@ -73,7 +73,75 @@ START_TEST(is_less_same_values_different_powers) {
         { 123, 0, 0, 0b00000000000100000000000000000000}
       };
 
+    ck_assert(s21_is_less(first, second) == 0);
+}
+END_TEST
+
+START_TEST(is_less_all_numbers_filled_1) {
+    s21_decimal first = {
+        { 111, 111, 110, 0b00000000000001000000000000000000}
+    };
+    s21_decimal second = {
+        { 111, 111, 111, 0b00000000000001000000000000000000}
+      };
+
     ck_assert(s21_is_less(first, second) == 1);
+}
+END_TEST
+
+START_TEST(is_less_all_numbers_filled_2) {
+    s21_decimal first = {
+        { 111, 111, 112, 0b00000000000001000000000000000000}
+    };
+    s21_decimal second = {
+        { 111, 111, 111, 0b00000000000001000000000000000000}
+      };
+
+    ck_assert(s21_is_less(first, second) == 0);
+}
+END_TEST
+
+START_TEST(is_not_equal_same_numbers) {
+    s21_decimal first = {
+        { 111, 111, 111, 0b00000000000001000000000000000000}
+    };
+    s21_decimal second = {
+        { 111, 111, 111, 0b00000000000001000000000000000000}
+      };
+    ck_assert(s21_is_not_equal(first, second) == 0);
+}
+END_TEST
+
+START_TEST(is_not_equal_different_signs) {
+    s21_decimal first = {
+        { 111, 111, 111, 0b00000000000001000000000000000001}
+    };
+    s21_decimal second = {
+        { 111, 111, 111, 0b00000000000001000000000000000000}
+      };
+    ck_assert(s21_is_not_equal(first, second) == 1);
+}
+END_TEST
+
+START_TEST(is_not_equal_different_values_1) {
+    s21_decimal first = {
+        { 111, 111, 000, 0b00000000000001000000000000000000}
+    };
+    s21_decimal second = {
+        { 111, 111, 111, 0b00000000000001000000000000000000}
+      };
+    ck_assert(s21_is_not_equal(first, second) == 1);
+}
+END_TEST
+
+START_TEST(is_not_equal_different_values_2) {
+    s21_decimal first = {
+        { 111, 111, 111, 0b00000000000001000000000000000000}
+    };
+    s21_decimal second = {
+        { 111, 111, 000, 0b00000000000001000000000000000000}
+      };
+    ck_assert(s21_is_not_equal(first, second) == 1);
 }
 END_TEST
 
@@ -84,11 +152,19 @@ Suite *suite_comparisons(void) {
 
   tcase_add_test(tc, is_equal_same_numbers);
   tcase_add_test(tc, is_equal_different_numbers);
+
   tcase_add_test(tc, is_less_different_signs);
   tcase_add_test(tc, is_less_same_signs_same_numbers);
   tcase_add_test(tc, is_less_same_signs_different_values);
   tcase_add_test(tc, is_less_same_values);
   tcase_add_test(tc, is_less_same_values_different_powers);
+  tcase_add_test(tc, is_less_all_numbers_filled_1);
+  tcase_add_test(tc, is_less_all_numbers_filled_2);
+
+  tcase_add_test(tc, is_not_equal_same_numbers);
+  tcase_add_test(tc, is_not_equal_different_signs);
+  tcase_add_test(tc, is_not_equal_different_values_1);
+  tcase_add_test(tc, is_not_equal_different_values_2);
 
   suite_add_tcase(s, tc);
   return s;
