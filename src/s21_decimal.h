@@ -34,6 +34,15 @@ int getBit(s21_decimal d, int i);
 void setBit(s21_decimal *d, int i);
 void setScale(s21_decimal *d, int i);
 int _mult_10_dec(s21_decimal *d, int* shift10);
+int getSign(s21_decimal src);
+int getScale(s21_decimal d);
+
+int s21_is_less(s21_decimal first, s21_decimal second);
+int s21_is_less_or_equal(s21_decimal first, s21_decimal second);
+int s21_is_greater(s21_decimal first, s21_decimal second);
+int s21_is_greater_or_equal(s21_decimal first, s21_decimal second);
+int s21_is_equal(s21_decimal first, s21_decimal second);
+int s21_is_not_equal(s21_decimal first, s21_decimal second);
 
 Suite *test_from_float_to_decimal(void);
 Suite *suite_from_decimal_to_float(void);

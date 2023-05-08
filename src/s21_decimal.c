@@ -288,7 +288,9 @@ long double ld_to_ld(long double x) {
   return res;
 }
 
-int getSign(s21_decimal src) { return getBit(src, 127); }
+int getSign(s21_decimal src) { return getBit(src, 127); } // возможно не работает (либо не работает getBit())
+// можно так
+// int getSign(s21_decimal src) { return src.bits[3] % 2; }
 
 int s21_from_decimal_to_float(s21_decimal src, float *dst) {
   int ret_val = 1;
@@ -560,29 +562,29 @@ int _is_less_dec_no_sign(s21_decimal value_1, s21_decimal value_2) {
   return rv;
 }
 
-int s21_is_less(s21_decimal value_1, s21_decimal value_2) {
-    int rv;
-    int sign1 = getSign(value_1);
-    int sign2 = getSign(value_2);
-    if(!sign1&&sign2)//+-
-      rv = 0;
-    else if(sign1 && !sign2)//-+
-      rv = 1;
-    else if(sign1 && sign2) {//-- 0 если в1 меньше по модулю
-      int res = _is_less_dec_no_sign(value_1, value_2);
-      if(res)//тут и в1 меньше по модулю + равенство res==2
-        rv = 0;
-      else if(!res) 
-        rv = 1;
-    } else if(!sign1 && !sign2) {//++ 1 (v1 меньше по модулю)
-      int res = _is_less_dec_no_sign(value_1, value_2);
-      if(res==1)
-        rv = 1;
-      else if(res==2 || res==0)
-        rv = 0;
-    }
-    return rv;
-}
+// int s21_is_less(s21_decimal value_1, s21_decimal value_2) {
+//     int rv;
+//     int sign1 = getSign(value_1);
+//     int sign2 = getSign(value_2);
+//     if(!sign1&&sign2)//+-
+//       rv = 0;
+//     else if(sign1 && !sign2)//-+
+//       rv = 1;
+//     else if(sign1 && sign2) {//-- 0 если в1 меньше по модулю
+//       int res = _is_less_dec_no_sign(value_1, value_2);
+//       if(res)//тут и в1 меньше по модулю + равенство res==2
+//         rv = 0;
+//       else if(!res) 
+//         rv = 1;
+//     } else if(!sign1 && !sign2) {//++ 1 (v1 меньше по модулю)
+//       int res = _is_less_dec_no_sign(value_1, value_2);
+//       if(res==1)
+//         rv = 1;
+//       else if(res==2 || res==0)
+//         rv = 0;
+//     }
+//     return rv;
+// }
 
 // 0 - OK
 // 1 - число слишком велико или равно бесконечности
