@@ -108,19 +108,14 @@ int s21_is_less(s21_decimal first, s21_decimal second)
     {
         result = firstSign;
     } else {
+        int resultByModule = -1;
         if(getScale(first) == getScale(second))
         {
-            int resultByModule = -1;
             for(int i = 2; i >= 0 && resultByModule == -1; --i)
                 if(first.bits[i] > second.bits[i])
                     resultByModule = 0;
                 else if(first.bits[i] < second.bits[i])
                     resultByModule = 1;
-            result = resultByModule == -1
-                ? 0
-                : firstSign == 0
-                    ? resultByModule
-                    : 1 - resultByModule;
         } else {
             unsigned int* newNumber = (unsigned int*)malloc(sizeof(unsigned int) * 7);
             if(newNumber != NULL)
@@ -132,8 +127,7 @@ int s21_is_less(s21_decimal first, s21_decimal second)
                 normilize(numberWithMaxScale == &first
                     ? first, second
                     : second, first, &newNumber);
-                
-                int resultByModule = -1;
+
                 if(newNumber[3] != 0 || newNumber[4] != 0 || newNumber[5] != 0)
                 {
                     resultByModule = numberWithMaxScale == &first
@@ -150,13 +144,13 @@ int s21_is_less(s21_decimal first, s21_decimal second)
                                 : 1;
                 }
                 free(newNumber);
-                result = resultByModule == -1
+            }
+        }
+        result = resultByModule == -1
                 ? 0
                 : firstSign == 0
                     ? resultByModule
                     : 1 - resultByModule;
-            }
-        }
     }
 
     return result;
