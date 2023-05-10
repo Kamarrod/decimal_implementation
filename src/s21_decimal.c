@@ -288,9 +288,7 @@ long double ld_to_ld(long double x) {
   return res;
 }
 
-int getSign(s21_decimal src) { return getBit(src, 127); } // возможно не работает (либо не работает getBit())
-// можно так
-// int getSign(s21_decimal src) { return src.bits[3] % 2; }
+int getSign(s21_decimal src) { return getBit(src, 127); }
 
 int s21_from_decimal_to_float(s21_decimal src, float *dst) {
   int ret_val = 1;

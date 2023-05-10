@@ -102,8 +102,8 @@ void normilize(s21_decimal numberWithMaxScale, s21_decimal otherNumber,
 int s21_is_less(s21_decimal first, s21_decimal second)
 {
     int result = -1;
-    int firstSign = first.bits[3] % 2;
-    int secondSign = second.bits[3] % 2;
+    int firstSign = getSign(first);
+    int secondSign = getSign(second);
     if(firstSign != secondSign)
     {
         result = firstSign;
