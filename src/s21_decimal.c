@@ -21,28 +21,27 @@ void setBit(s21_decimal *d, int i) {
   // printf("SETBIT POSLE %X\n", d->bits[i/32]);
 }
 
-void dec_to_bin(s21_decimal d) {
-  printf(" SCALE: ");
-  int sci = 32;
-  for (unsigned int mask = 1u << 31; mask; mask >>= 1) {
-    if (sci % 4 == 0)
-      printf(" ");
-    printf("%d", !!(d.bits[3] & mask));
-    sci--;
-  }
-  printf(" HIGH: ");
-  for (unsigned int mask = 1u << 31; mask; mask >>= 1)
-    printf("%d", !!(d.bits[2] & mask));
-
-  printf(" MID: ");
-  for (unsigned int mask = 1u << 31; mask; mask >>= 1)
-    printf("%d", !!(d.bits[1] & mask));
-
-  printf(" LOW: ");
-  for (unsigned int mask = 1u << 31; mask; mask >>= 1)
-    printf("%d", !!(d.bits[0] & mask));
-  printf("\n");
-}
+// void dec_to_bin(s21_decimal d) {
+//   printf(" SCALE: ");
+//   int sci = 32;
+//   for (unsigned int mask = 1u << 31; mask; mask >>= 1) {
+//     if (sci % 4 == 0)
+//       printf(" ");
+//     printf("%d", !!(d.bits[3] & mask));
+//     sci--;
+//   }
+//   printf(" HIGH: ");
+//   for (unsigned int mask = 1u << 31; mask; mask >>= 1)
+//     printf("%d", !!(d.bits[2] & mask));
+//   printf(" MID: ");
+//   for (unsigned int mask = 1u << 31; mask; mask >>= 1)
+//     printf("%d", !!(d.bits[1] & mask));
+//   printf(" LOW: ");
+//   for (unsigned int mask = 1u << 31; mask; mask >>= 1)
+//     printf("%d", !!(d.bits[0] & mask));
+//   printf("\n");
+// 
+// }
 
 void setScale(s21_decimal *d, int scale) {
   //есть десятичное число scale 0 до 28 11100
@@ -70,41 +69,41 @@ int getScale(s21_decimal d) {
   return scale;
 }
 
-void float_to_binary(float f) {
-  printf("\n");
-  unsigned int fbits = *((unsigned int *)&f);
-  for (unsigned int mask = 0x80000000; mask; mask >>= 1) //маску делим на 2
-    printf("%d", !!(fbits & mask));
-  printf("\n");
-}
+// void float_to_binary(float f) {
+//   printf("\n");
+//   unsigned int fbits = *((unsigned int *)&f);
+//   for (unsigned int mask = 0x80000000; mask; mask >>= 1) //маску делим на 2
+//     printf("%d", !!(fbits & mask));
+//   printf("\n");
+// }
 
-void double_to_binary(double f) {
-  printf("\n");
-  unsigned long long fbits = *((unsigned long long *)&f);
-  unsigned long long mask = 1ull << 63;
-  for (; mask; mask >>= 1) //маску делим на 2
-    printf("%d", !!(fbits & mask));
-  printf("\n");
-}
+// void double_to_binary(double f) {
+//   printf("\n");
+//   unsigned long long fbits = *((unsigned long long *)&f);
+//   unsigned long long mask = 1ull << 63;
+//   for (; mask; mask >>= 1) //маску делим на 2
+//     printf("%d", !!(fbits & mask));
+//   printf("\n");
+// }
 
-float binary_to_float(unsigned int fbits) { // только положительные числа
-  float res = 0;
-  int i = 7, exp = -127;
-  //встали маской на 1 бит цикл крутится 8 раз
-  for (unsigned int mask = 0x40000000; mask >= 0x800000;
-       mask >>= 1) { //маску делим на 2
-    exp += !!(fbits & mask) * pow(2, i);
-    i--;
-  }
-  //встали маской на 9 бит после exp
-  //цикл крутится 23 раза
-  res += pow(2, exp);
-  for (unsigned int mask = 0x400000; mask; mask >>= 1) {
-    exp--;
-    res += !!(fbits & mask) * pow(2, exp);
-  }
-  return res;
-}
+// float binary_to_float(unsigned int fbits) { // только положительные числа
+//   float res = 0;
+//   int i = 7, exp = -127;
+//   //встали маской на 1 бит цикл крутится 8 раз
+//   for (unsigned int mask = 0x40000000; mask >= 0x800000;
+//        mask >>= 1) { //маску делим на 2
+//     exp += !!(fbits & mask) * pow(2, i);
+//     i--;
+//   }
+//   //встали маской на 9 бит после exp
+//   //цикл крутится 23 раза
+//   res += pow(2, exp);
+//   for (unsigned int mask = 0x400000; mask; mask >>= 1) {
+//     exp--;
+//     res += !!(fbits & mask) * pow(2, exp);
+//   }
+//   return res;
+// }
 
 int getBinExpF(float f) {
   //число представляет в битах f
@@ -255,38 +254,36 @@ int getBinExpLD(long double x) {
   return res;
 }
 
-void printLD(long double x) {
-  union {
-    long double x;
-    char c[sizeof(long double)];
-  } u;
-  u.x = x;
+// void printLD(long double x) {
+//   union {
+//     long double x;
+//     char c[sizeof(long double)];
+//   } u;
+//   u.x = x;
+//   for (int ofs = 9; ofs >= 0; ofs--) {
+//     for (int i = 7; i >= 0; i--) {
+//       printf(((1 << i) & u.c[ofs]) ? "1" : "0");
+//     }
+//     printf(" ");
+//   }
+// }
 
-  for (int ofs = 9; ofs >= 0; ofs--) {
-    for (int i = 7; i >= 0; i--) {
-      printf(((1 << i) & u.c[ofs]) ? "1" : "0");
-    }
-    printf(" ");
-  }
-}
-
-long double ld_to_ld(long double x) {
-  long double res = 0;
-  union {
-    long double x;
-    char c[sizeof(long double)];
-  } u;
-  u.x = x;
-
-  int j = getBinExpLD(x);
-  for (int ofs = 7; ofs >= 0; ofs--) {
-    for (int i = 7; i >= 0; i--) {
-      res += !!((1 << i) & u.c[ofs]) * pow(2, j);
-      j--;
-    }
-  }
-  return res;
-}
+// long double ld_to_ld(long double x) {
+//   long double res = 0;
+//   union {
+//     long double x;
+//     char c[sizeof(long double)];
+//   } u;
+//   u.x = x;
+//   int j = getBinExpLD(x);
+//   for (int ofs = 7; ofs >= 0; ofs--) {
+//     for (int i = 7; i >= 0; i--) {
+//       res += !!((1 << i) & u.c[ofs]) * pow(2, j);
+//       j--;
+//     }
+//   }
+//   return res;
+// }
 
 int getSign(s21_decimal src) { return getBit(src, 127); }
 
@@ -456,109 +453,109 @@ void clearBit(s21_decimal *d, int i) {
   d->bits[i / 32] &= mask;
 }
 
-void dec_to_dop_code(s21_decimal *d) {
-  d->bits[0] = ~d->bits[0] + 1;
-  d->bits[1] = ~d->bits[1];
-  d->bits[2] = ~d->bits[2];
-}
+// void dec_to_dop_code(s21_decimal *d) {
+//   d->bits[0] = ~d->bits[0] + 1;
+//   d->bits[1] = ~d->bits[1];
+//   d->bits[2] = ~d->bits[2];
+// }
 
-void dec_to_norm_code(s21_decimal *d) {
-  d->bits[0] -= 1;
-  d->bits[0] = ~d->bits[0];
-  d->bits[1] = ~d->bits[1];
-  d->bits[2] = ~d->bits[2];
-}
+// void dec_to_norm_code(s21_decimal *d) {
+//   d->bits[0] -= 1;
+//   d->bits[0] = ~d->bits[0];
+//   d->bits[1] = ~d->bits[1];
+//   d->bits[2] = ~d->bits[2];
+// }
 
-int s21_negate(s21_decimal value, s21_decimal *result) {
-  int rv = 1;
-  if (result) {
-    if (getSign(value))
-      clearBit(result, 127);
-    else
-      setBit(result, 127);
-    rv = 0;
-  }
-  return rv;
-}
+// int s21_negate(s21_decimal value, s21_decimal *result) {
+//   int rv = 1;
+//   if (result) {
+//     if (getSign(value))
+//       clearBit(result, 127);
+//     else
+//       setBit(result, 127);
+//     rv = 0;
+//   }
+//   return rv;
+// }
 
-int s21_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
-  int rv = 1;
-  if (result) {
-    s21_negate(value_2, &value_2);
-    rv = s21_add(value_1, value_2, result);
-  }
-  return rv;
-}
+// int s21_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
+//   int rv = 1;
+//   if (result) {
+//     s21_negate(value_2, &value_2);
+//     rv = s21_add(value_1, value_2, result);
+//   }
+//   return rv;
+// }
 
-int _to_same_scale_dec(s21_decimal *value_1, s21_decimal *value_2, int* res_scale) {
-  int rv = 0; // 0 ok 1 нельзя привести
-  // приводим к большему, чтобы не потерять точность
-  // scale нельзя вечно увеличивать, тк вместе с ним увеличивается и число
-  //тогда нужно начать уменьшать scale
-  int s1 = getScale(*value_1);
-  int s2 = getScale(*value_2);
-  if(s1>0 || s2>0) {
-    if (s1 > s2) {
-      int shift = s1 - s2;
-      int err = _mult_10_dec(value_2, &shift);
-      *res_scale = s1;
-      if (err) { //уменьшаем scale
-        //значит надо делить на 10 число с большим scale
-        //поделить его нужно столько раз, сколько осталось сдвигов
-        //scale = s1 - shift;
-        printf("NADO UMENSHAT 1\n");
-        //если и уменьшив не сможем сложить без переполнения
-      }
-    } else if (s2 > s1) {
-      int shift = s2 - s1;
-      int err = _mult_10_dec(value_1, &shift);
-      *res_scale = s2;
-      if (err) { //уменьшаем scale
-        //значит надо делить на 10 число с большим scale
-        printf("NADO UMENSHAT 2\n");
-      }
-    } else {
-      *res_scale = s1;
-    }
-  }
-  return rv;
-}
+// int _to_same_scale_dec(s21_decimal *value_1, s21_decimal *value_2, int* res_scale) {
+//   int rv = 0; // 0 ok 1 нельзя привести
+//   // приводим к большему, чтобы не потерять точность
+//   // scale нельзя вечно увеличивать, тк вместе с ним увеличивается и число
+//   //тогда нужно начать уменьшать scale
+//   int s1 = getScale(*value_1);
+//   int s2 = getScale(*value_2);
+//   if(s1>0 || s2>0) {
+//     if (s1 > s2) {
+//       int shift = s1 - s2;
+//       int err = _mult_10_dec(value_2, &shift);
+//       *res_scale = s1;
+//       if (err) { //уменьшаем scale
+//         //значит надо делить на 10 число с большим scale
+//         //поделить его нужно столько раз, сколько осталось сдвигов
+//         //scale = s1 - shift;
+//         printf("NADO UMENSHAT 1\n");
+//         //если и уменьшив не сможем сложить без переполнения
+//       }
+//     } else if (s2 > s1) {
+//       int shift = s2 - s1;
+//       int err = _mult_10_dec(value_1, &shift);
+//       *res_scale = s2;
+//       if (err) { //уменьшаем scale
+//         //значит надо делить на 10 число с большим scale
+//         printf("NADO UMENSHAT 2\n");
+//       }
+//     } else {
+//       *res_scale = s1;
+//     }
+//   }
+//   return rv;
+// }
 
-int _is_less_dec_no_sign(s21_decimal value_1, s21_decimal value_2) {
-  //нужно привести к 1 scale
-  int res_scale, rv;
-  //берем 1е ненулевые индексы
-  if(getScale(value_1)!=getScale(value_2))
-    _to_same_scale_dec(&value_1, &value_2, &res_scale);
-  // printf("SAME SCALE\n");
-  // dec_to_bin(value_1);
-  // dec_to_bin(value_2);
-  int fnzi1 = getFirstNotZeroIndex(value_1);
-  int fnzi2 = getFirstNotZeroIndex(value_2);
-  if(fnzi1 > fnzi2)
-    rv = 0;
-  else if(fnzi1 < fnzi2) {
-    rv = 1;
-  } else {
-    int found = 0, i = fnzi1;
-    while (i >= 0 && !found) {
-      if (getBit(value_1, i) != getBit(value_2, i)){
-        found = 1;
-        if(getBit(value_1, i))//если тут у 1 стоит 1 значит он больше по модулю
-          rv = 0;
-        else
-          rv = 1;
-      }
-      i--;
-    }
-    if(!found)//если не нашли различий - числа одинаковы
-      rv = 2;
-  }
-  //если fnzi неравны - результат
-  //fnzi равны - идем по числам до тех пор пока не натолкнемся на различие
-  //rv 2 если числа равны
-  return rv;
-}
+// int _is_less_dec_no_sign(s21_decimal value_1, s21_decimal value_2) {
+//   //нужно привести к 1 scale
+//   int res_scale, rv;
+//   //берем 1е ненулевые индексы
+//   if(getScale(value_1)!=getScale(value_2))
+//     _to_same_scale_dec(&value_1, &value_2, &res_scale);
+//   // printf("SAME SCALE\n");
+//   // dec_to_bin(value_1);
+//   // dec_to_bin(value_2);
+//   int fnzi1 = getFirstNotZeroIndex(value_1);
+//   int fnzi2 = getFirstNotZeroIndex(value_2);
+//   if(fnzi1 > fnzi2)
+//     rv = 0;
+//   else if(fnzi1 < fnzi2) {
+//     rv = 1;
+//   } else {
+//     int found = 0, i = fnzi1;
+//     while (i >= 0 && !found) {
+//       if (getBit(value_1, i) != getBit(value_2, i)){
+//         found = 1;
+//         if(getBit(value_1, i))//если тут у 1 стоит 1 значит он больше по модулю
+//           rv = 0;
+//         else
+//           rv = 1;
+//       }
+//       i--;
+//     }
+//     if(!found)//если не нашли различий - числа одинаковы
+//       rv = 2;
+//   }
+//   //если fnzi неравны - результат
+//   //fnzi равны - идем по числам до тех пор пока не натолкнемся на различие
+//   //rv 2 если числа равны
+//   return rv;
+// }
 
 // int s21_is_less(s21_decimal value_1, s21_decimal value_2) {
 //     int rv;
@@ -588,74 +585,68 @@ int _is_less_dec_no_sign(s21_decimal value_1, s21_decimal value_2) {
 // 1 - число слишком велико или равно бесконечности
 // 2 - число слишком мало или равно отрицательной бесконечности
 // 3 - деление на 0
-int s21_add(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
-  int rv = 0;
-  if (result) {
-    for (int i = 0; i < 4; i++)
-      result->bits[i] = 0;
-    //
-    // нужно предусмотреть что оба числа положительны или отрицательны иначе
-    // сюда запихнуть вычитание
-    //
-    int neg = 0, res_from_dop = 0;
-    int sign1 = getSign(value_1);
-    int sign2 = getSign(value_2);
-    // нужно привести к 1 scale
-    int res_scale = 0;
-    _to_same_scale_dec(&value_1, &value_2, &res_scale);
-
-    if (sign1 && sign2) {
-      neg = 1;
-    } else if ((sign1 && !sign2)) {
-      //если число с минусом по модулю больше - результат придется конвертить из
-      //доп кода
-      //проверки по fnzi недостаточно - scale все портит
-      clearBit(&value_1, 127);
-      if (s21_is_less(value_2, value_1))
-        res_from_dop = 1;
-      setBit(&value_1, 127);
-
-      //число у которого знак переводим в доп код и уже его складываем
-      dec_to_dop_code(&value_1);
-      printf("IN FUNCT DOP 1 \n");
-      dec_to_bin(value_1);
-
-    } else if ((!sign1 && sign2)) {
-      clearBit(&value_2, 127);
-      if (s21_is_less(value_1, value_2))
-        res_from_dop = 1;
-      setBit(&value_2, 127);
-      
-      dec_to_dop_code(&value_2);
-      printf("IN FUNCT DOP 2 \n");
-      dec_to_bin(value_2);
-    }
-
-    // dec_to_bin(value_1);
-    // dec_to_bin(value_2);
-    //внутри функ не нужно обнулять тк выше рез уже обнулялся
-    //
-    //учесть что при подачи в доп коде может быть переполнение  и rv станет 1
-    //
-    rv = add_dec_no_scale(value_1, value_2, result);
-    //выше если переполнение вернется 1
-    if (rv && (neg || res_from_dop))
-      rv = 2; //тут говорим что оч маленькое число
-
-    if (res_from_dop)
-      dec_to_norm_code(result);
-    if (res_scale)
-      setScale(result, res_scale);
-    if (neg || res_from_dop)
-      setBit(result, 127);
-    // printf("IN FUNC CHECK\n");
-    // dec_to_bin(value_1);
-    // dec_to_bin(value_2);
-  }
-  // printf("RESULT:\n");
-  // dec_to_bin(*result);
-  return rv;
-}
+// int s21_add(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
+//   int rv = 0;
+//   if (result) {
+//     for (int i = 0; i < 4; i++)
+//       result->bits[i] = 0;
+//     //
+//     // нужно предусмотреть что оба числа положительны или отрицательны иначе
+//     // сюда запихнуть вычитание
+//     //
+//     int neg = 0, res_from_dop = 0;
+//     int sign1 = getSign(value_1);
+//     int sign2 = getSign(value_2);
+//     // нужно привести к 1 scale
+//     int res_scale = 0;
+//     _to_same_scale_dec(&value_1, &value_2, &res_scale);
+//     if (sign1 && sign2) {
+//       neg = 1;
+//     } else if ((sign1 && !sign2)) {
+//       //если число с минусом по модулю больше - результат придется конвертить из
+//       //доп кода
+//       //проверки по fnzi недостаточно - scale все портит
+//       clearBit(&value_1, 127);
+//       if (s21_is_less(value_2, value_1))
+//         res_from_dop = 1;
+//       setBit(&value_1, 127);
+//       //число у которого знак переводим в доп код и уже его складываем
+//       dec_to_dop_code(&value_1);
+//       printf("IN FUNCT DOP 1 \n");
+//       dec_to_bin(value_1);
+//     } else if ((!sign1 && sign2)) {
+//       clearBit(&value_2, 127);
+//       if (s21_is_less(value_1, value_2))
+//         res_from_dop = 1;
+//       setBit(&value_2, 127);
+//       dec_to_dop_code(&value_2);
+//       printf("IN FUNCT DOP 2 \n");
+//       dec_to_bin(value_2);
+//     }
+//     // dec_to_bin(value_1);
+//     // dec_to_bin(value_2);
+//     //внутри функ не нужно обнулять тк выше рез уже обнулялся
+//     //
+//     //учесть что при подачи в доп коде может быть переполнение  и rv станет 1
+//     //
+//     rv = add_dec_no_scale(value_1, value_2, result);
+//     //выше если переполнение вернется 1
+//     if (rv && (neg || res_from_dop))
+//       rv = 2; //тут говорим что оч маленькое число
+//     if (res_from_dop)
+//       dec_to_norm_code(result);
+//     if (res_scale)
+//       setScale(result, res_scale);
+//     if (neg || res_from_dop)
+//       setBit(result, 127);
+//     // printf("IN FUNC CHECK\n");
+//     // dec_to_bin(value_1);
+//     // dec_to_bin(value_2);
+//   }
+//   // printf("RESULT:\n");
+//   // dec_to_bin(*result);
+//   return rv;
+// }
 
 
 // ADD
