@@ -74,4 +74,6 @@ Suite *suite_from_decimal_to_int(void);
 Suite *suite_add(void);
 Suite *suite_sub(void);
 Suite *suite_is_less(void);
+Suite *suite_mul(void);
+Suite *suite_div(void);
 #endif // S21_DECIMAL_H
