@@ -21,27 +21,27 @@ void setBit(s21_decimal *d, int i) {
   // printf("SETBIT POSLE %X\n", d->bits[i/32]);
 }
 
-// void dec_to_bin(s21_decimal d) {
-//   printf(" SCALE: ");
-//   int sci = 32;
-//   for (unsigned int mask = 1u << 31; mask; mask >>= 1) {
-//     if (sci % 4 == 0)
-//       printf(" ");
-//     printf("%d", !!(d.bits[3] & mask));
-//     sci--;
-//   }
-//   printf(" HIGH: ");
-//   for (unsigned int mask = 1u << 31; mask; mask >>= 1)
-//     printf("%d", !!(d.bits[2] & mask));
-//   printf(" MID: ");
-//   for (unsigned int mask = 1u << 31; mask; mask >>= 1)
-//     printf("%d", !!(d.bits[1] & mask));
-//   printf(" LOW: ");
-//   for (unsigned int mask = 1u << 31; mask; mask >>= 1)
-//     printf("%d", !!(d.bits[0] & mask));
-//   printf("\n");
-// 
-// }
+void dec_to_bin(s21_decimal d) {
+  printf(" SCALE: ");
+  int sci = 32;
+  for (unsigned int mask = 1u << 31; mask; mask >>= 1) {
+    if (sci % 4 == 0)
+      printf(" ");
+    printf("%d", !!(d.bits[3] & mask));
+    sci--;
+  }
+  printf(" HIGH: ");
+  for (unsigned int mask = 1u << 31; mask; mask >>= 1)
+    printf("%d", !!(d.bits[2] & mask));
+  printf(" MID: ");
+  for (unsigned int mask = 1u << 31; mask; mask >>= 1)
+    printf("%d", !!(d.bits[1] & mask));
+  printf(" LOW: ");
+  for (unsigned int mask = 1u << 31; mask; mask >>= 1)
+    printf("%d", !!(d.bits[0] & mask));
+  printf("\n");
+
+}
 
 void setScale(s21_decimal *d, int scale) {
   //есть десятичное число scale 0 до 28 11100
@@ -209,22 +209,29 @@ int s21_from_float_to_decimal(float src, s21_decimal *dst) {
     for (int i = 0; i < 4; i++)
       dst->bits[i] = 0;
     int neg = 0, scale = 0;
-    double rf = src;
-    if (rf < 0) {
-      neg = 1;
-      rf = -rf;
+    if(src!=0) {
+        double rf = src;
+        if (rf < 0) {
+          neg = 1;
+          rf = -rf;
+        }
+        if(rf>= 1E-28 && rf <= 79228162514264337593543950335.0) {
+          int binexp = getBinExpD(rf);
+          if (binexp <= 95) {
+            int shift = get_scale_n_right_form(&scale, rf, &rf, dst);
+            setScale(dst, scale);
+            if (shift <= 0)
+              _double_to_dec(rf, dst);
+            if (neg)
+              setBit(dst, 127);
+          } else {
+            rv = 1;
+          }
+        } else {
+          rv = 1;
+        }
     }
-    int binexp = getBinExpD(rf);
-    if (binexp <= 95) {
-      int shift = get_scale_n_right_form(&scale, rf, &rf, dst);
-      setScale(dst, scale);
-      if (shift <= 0)
-        _double_to_dec(rf, dst);
-      if (neg)
-        setBit(dst, 127);
-    } else {
-      rv = 1;
-    }
+
   } else {
     rv = 1;
   }
@@ -320,7 +327,6 @@ int s21_from_int_to_decimal(int src, s21_decimal *dst) {
     for (int i = 0; i < 4; i++)
       dst->bits[i] = 0;
     int neg = 0;
-
     if (src < 0) {
       neg = 1;
       src = -src;
@@ -329,6 +335,7 @@ int s21_from_int_to_decimal(int src, s21_decimal *dst) {
     if (neg)
       setBit(dst, 127);
     ret_val = 0;
+
   }
   return ret_val;
 }
@@ -696,3 +703,21 @@ void clearBit(s21_decimal *d, int i) {
 //   printf("RES %d\n", res);
 //    return 0;
 //  }
+
+
+
+ int main () {
+
+  float f = 79228162514264337593543950335.0f;
+  printf("BINEXP %d \n", getBinExpF(f));
+
+  long double ld = 79228162514264337593543950335.0;
+  printf("\nBINEXP %d \n", getBinExpLD(ld));
+
+  s21_decimal d;
+  int res = s21_from_float_to_decimal(f, &d);
+  // dec_to_bin(d);
+  printf("\nSCALE %d \n", getScale(d));
+  printf("RES %d\n", res);
+  return 0;
+ }

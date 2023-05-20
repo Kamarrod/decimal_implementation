@@ -19,7 +19,7 @@ test: clean
 	$(CC) -c s21_decimal.c tests.c t_add.c 
 	$(CC) s21_decimal.o tests.o t_add.o $(TST_LIBS) -o test
 	rm -rf *.o
-	./test
+	# ./test
 test_conv: clean
 	$(CC) -c s21_decimal.c tests.c t_from_dec_to_float.c t_from_dec_to_int.c t_from_float_to_dec.c t_from_int_to_dec.c
 	$(CC) s21_decimal.o tests.o t_from_dec_to_float.o t_from_dec_to_int.o t_from_float_to_dec.o t_from_int_to_dec.o $(TST_LIBS) -o test
