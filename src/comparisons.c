@@ -30,24 +30,34 @@ void intToBinary(unsigned int number, int** result)
     }
 }
 
-unsigned int binaryToInt(int* binary)
+unsigned int binaryToInt(int* binary, int shift)
 {
     unsigned int number = 0;
-    for (int i = 0; i < 32; ++i)
-        if(binary[i] == 1)
+    for(int i = 0; i < 32; ++i)
+        if(binary[32 * shift + i] == 1)
             number += pow(2, i);
 
     return number;
+
+
+    // unsigned int number = 0;
+    // for (int i = 0; i < 32; ++i)
+    //     if(binary[i] == 1)
+    //         number += pow(2, i);
+
+    // return number;
 }
 
 void multiplyBy10(unsigned int** number)
 {
-    int* numberCopy = (int*)malloc(32 * 7 * sizeof(int));
+    int* numberCopy = malloc(32 * 7 * sizeof(int));
     if(numberCopy != NULL)
     {
         for (int i = 0; i < 7; ++i)
         {
-            int* binary = (int*)malloc(32 * sizeof(int));
+            int* binary = malloc(32 * sizeof(int));
+            for(int j = 0; j < 32; ++j)
+                binary[j] = 0;
             if(binary != NULL)
             {
                 intToBinary((*number)[i], &binary);
@@ -56,7 +66,13 @@ void multiplyBy10(unsigned int** number)
                 free(binary);
             }
         }
-        int* numberCopyMultipliedBy2 = (int*)malloc(32 * 7 * sizeof(int));
+
+        // printf("\n\ncopy:\n");
+        // for(int i = 0; i < 7 * 32; ++i)
+        //     printf("%d", numberCopy[i]);
+        // printf("\ncopy end\n");
+
+        int* numberCopyMultipliedBy2 = malloc(32 * 7 * sizeof(int));
         if(numberCopyMultipliedBy2 != NULL)
         {
             numberCopyMultipliedBy2[0] = 0;
@@ -64,7 +80,7 @@ void multiplyBy10(unsigned int** number)
             for (int i = 0; i < 32 * 7 - 2; ++i)
                 numberCopyMultipliedBy2[i + 2] = numberCopy[i];
             
-            int* result = (int*)malloc(32 * 7 * sizeof(int));
+            int* result = malloc(32 * 7 * sizeof(int));
             if(result != NULL)
             {
                 int memory = 0;
@@ -77,7 +93,7 @@ void multiplyBy10(unsigned int** number)
 
                 for(int i = 0; i < 7; ++i)
                 {
-                    (*number)[i] = binaryToInt(result);
+                    (*number)[i] = binaryToInt(result, i);
                 }
                 free(result);
             }
@@ -95,8 +111,20 @@ void normilize(s21_decimal numberWithMaxScale, s21_decimal otherNumber,
     for (int i = 0; i < 3; ++i)
         (*newNumber)[i] = otherNumber.bits[i];
 
+    // printf("________\n");
+    //     for(int i = 0; i < 4; ++i)
+    //         printf("%d ", (*newNumber)[i]);
+            
+    //     printf("\n________\n");
     for (int i = 0; i < scale; ++i)
+    {
         multiplyBy10(newNumber);
+        // printf("________\n");
+        // for(int i = 0; i < 7; ++i)
+        //     printf("%d ", (*newNumber)[i]);
+            
+        // printf("\n________\n");
+    }
 }
 
 int s21_is_less(s21_decimal first, s21_decimal second)
@@ -117,9 +145,11 @@ int s21_is_less(s21_decimal first, s21_decimal second)
                 else if(first.bits[i] < second.bits[i])
                     resultByModule = 1;
         } else {
-            unsigned int* newNumber = (unsigned int*)malloc(sizeof(unsigned int) * 7);
+            unsigned int* newNumber = malloc(sizeof(unsigned int) * 7);
             if(newNumber != NULL)
             {
+                for(int i = 0; i < 7; ++i)
+                    newNumber[i] = 0;
                 s21_decimal* numberWithMaxScale = getScale(first) >= getScale(second)
                     ? &first
                     : &second;
@@ -127,6 +157,19 @@ int s21_is_less(s21_decimal first, s21_decimal second)
                 normilize(numberWithMaxScale == &first
                     ? first, second
                     : second, first, &newNumber);
+
+                // printf("\nfirst: ");
+                // for(int i = 0; i < 4; ++i)
+                //     printf("%d ", first.bits[i]);
+                // printf("\n");
+                // printf("\nsecond: ");
+                // for(int i = 0; i < 4; ++i)
+                //     printf("%d ", second.bits[i]);
+                // printf("\n");
+                // printf("\nnew number: ");
+                // for(int i = 0; i < 7; ++i)
+                //     printf("%d ", newNumber[i]);
+                // printf("\n");
 
                 if(newNumber[3] != 0 || newNumber[4] != 0 || newNumber[5] != 0)
                 {

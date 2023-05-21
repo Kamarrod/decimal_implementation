@@ -21,6 +21,19 @@ START_TEST(is_equal_different_numbers) {
 }
 END_TEST
 
+START_TEST(is_less)
+{
+    s21_decimal first = {
+        {5, 0, 0, 65536}
+    };
+    s21_decimal second = {
+        {61111, 0, 0, 327680}
+    };
+
+    ck_assert(s21_is_less(first, second) == 1);
+}
+END_TEST
+
 START_TEST(is_less_different_signs) {
     s21_decimal first = {
       {12344, 0, 0, 0b00000000000001000000000000000000}}; //  1.2345
@@ -433,6 +446,8 @@ Suite *suite_comparisons(void) {
 
   tcase_add_test(tc, is_equal_same_numbers);
   tcase_add_test(tc, is_equal_different_numbers);
+
+  tcase_add_test(tc, is_less);
 
   tcase_add_test(tc, is_less_different_signs);
   tcase_add_test(tc, is_less_same_signs_same_numbers);
