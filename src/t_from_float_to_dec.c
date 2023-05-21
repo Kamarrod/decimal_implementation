@@ -2798,7 +2798,7 @@ START_TEST(s21_float_252) {
 END_TEST
 
 START_TEST(s21_float_253) {
-  float inp = 79228162514264337593543950335.0f;
+  float inp = 79228200293196200550705659904.0f;
   s21_decimal out = {{0, 0, 0, 0}};
   int error = s21_from_float_to_decimal(inp, &out);
   s21_decimal res = {{0, 0, 0, 0}};
@@ -2811,6 +2811,19 @@ START_TEST(s21_float_253) {
 }
 END_TEST
 
+START_TEST(s21_float_254) {
+  float inp = 7922816200000000000000000000.0f;
+  s21_decimal out = {{0, 0, 0, 0}};
+  int error = s21_from_float_to_decimal(inp, &out);
+  s21_decimal res = {{-805306368, -128223179, 429496715, 0}};
+
+  ck_assert_int_eq(out.bits[0], res.bits[0]);
+  ck_assert_int_eq(out.bits[1], res.bits[1]);
+  ck_assert_int_eq(out.bits[2], res.bits[2]);
+  ck_assert_int_eq(out.bits[3], res.bits[3]);
+  ck_assert_int_eq(error, 0);
+}
+END_TEST
 Suite *test_from_float_to_decimal(void) {
   Suite *s = suite_create("\033[45m-=S21_FROM_FLOAT_TO_DECIMAL=-\033[0m");
   TCase *tc = tcase_create("s21_from_float_to_decimal_tc");
@@ -3078,6 +3091,8 @@ Suite *test_from_float_to_decimal(void) {
   tcase_add_test(tc, s21_float_251);
   tcase_add_test(tc, s21_float_252);
   tcase_add_test(tc, s21_float_253);
+  tcase_add_test(tc, s21_float_254);
+
 
   suite_add_tcase(s, tc);
   return s;

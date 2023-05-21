@@ -48,11 +48,12 @@ END_TEST
 START_TEST(s21_from_decimal_to_float_3_1) {
   s21_decimal src;
   int result = 0;
-  float number = -0.0;
+  float number = 0.0;
   src.bits[0] = 0;
   src.bits[1] = 0;
   src.bits[2] = 0;
   src.bits[3] = 0;
+  setBit(&src, 127);
   result = s21_from_decimal_to_float(src, &number);
   ck_assert_float_eq(number, 0);
   ck_assert_int_eq(result, 0);
@@ -257,6 +258,21 @@ START_TEST(s21_from_decimal_to_float_16) {
 }
 END_TEST
 
+START_TEST(s21_from_decimal_to_float_17) {
+  s21_decimal src1;
+  float dst;
+  float check = 7922816200000000000000000000.0f;
+  src1.bits[0] = -805306368;
+  src1.bits[1] = -128223179;
+  src1.bits[2] = 429496715;
+  src1.bits[3] = 0;
+  int code = s21_from_decimal_to_float(src1, &dst);
+  ck_assert_double_eq_tol(dst, check, 5e+21); //те разница в 8 цифре меньше 0,5
+  ck_assert_int_eq(code, 0);
+}
+END_TEST
+
+
 Suite *suite_from_decimal_to_float(void) {
   Suite *s = suite_create("s21_from_decimal_to_float");
   TCase *tc = tcase_create("case_from_decimal_to_float");
@@ -280,6 +296,8 @@ Suite *suite_from_decimal_to_float(void) {
   tcase_add_test(tc, s21_from_decimal_to_float_14);
   tcase_add_test(tc, s21_from_decimal_to_float_15);
   tcase_add_test(tc, s21_from_decimal_to_float_16);
+  tcase_add_test(tc, s21_from_decimal_to_float_17);
+
 
   suite_add_tcase(s, tc);
   return s;
