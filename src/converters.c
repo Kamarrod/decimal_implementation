@@ -21,28 +21,6 @@ void setBit(s21_decimal *d, int i) {
   // printf("SETBIT POSLE %X\n", d->bits[i/32]);
 }
 
-void dec_to_bin(s21_decimal d) {
-  printf(" SCALE: ");
-  int sci = 32;
-  for (unsigned int mask = 1u << 31; mask; mask >>= 1) {
-    if (sci % 4 == 0)
-      printf(" ");
-    printf("%d", !!(d.bits[3] & mask));
-    sci--;
-  }
-  printf(" HIGH: ");
-  for (unsigned int mask = 1u << 31; mask; mask >>= 1)
-    printf("%d", !!(d.bits[2] & mask));
-  printf(" MID: ");
-  for (unsigned int mask = 1u << 31; mask; mask >>= 1)
-    printf("%d", !!(d.bits[1] & mask));
-  printf(" LOW: ");
-  for (unsigned int mask = 1u << 31; mask; mask >>= 1)
-    printf("%d", !!(d.bits[0] & mask));
-  printf("\n");
-
-}
-
 void setScale(s21_decimal *d, int scale) {
   //есть десятичное число scale 0 до 28 11100
   //его нужно записать в bits[3] с 16 по 23
@@ -69,20 +47,6 @@ int getScale(s21_decimal d) {
   return scale;
 }
 
-
-int getBinExpF(float f) {
-  //число представляет в битах f
-  unsigned int fbits =
-      *((unsigned int *)&f); //получаем f так как он хранится в памяти
-  //нужно проверить биты с 1 по 8
-  int i = 7, res = -127;
-  for (unsigned int mask = 0x40000000; mask >= 0x800000;
-       mask >>= 1) { //маску делим на 2
-    res += !!(fbits & mask) * pow(2, i);
-    i--;
-  }
-  return res;
-}
 
 int getBinExpD(double f) {
   int i = 11, res = -1023;
@@ -166,31 +130,6 @@ int get_scale_n_right_form(int *scale, double dinp, double *rf,
   }
   *rf = dinp;
   return shift;
-}
-
-
-
-int getBinExpLD(long double x) {
-  int res = -16383;
-  union {
-    long double x;
-    char c[sizeof(long double)];
-  } u;
-  u.x = x;
-  printf(" ");
-  int j = 14;
-  for (int i = 6; i >= 0; i--) {
-    printf("%d", !!((1 << i) & u.c[9]));
-    res += !!((1 << i) & u.c[9]) * pow(2, j);
-    j--;
-  }
-  printf(" ");
-  for (int i = 7; i >= 0; i--) {
-    printf("%d", !!((1 << i) & u.c[8]));
-    res += !!((1 << i) & u.c[8]) * pow(2, j);
-    j--;
-  }
-  return res;
 }
 
 
@@ -283,12 +222,6 @@ int _mult_10_dec(s21_decimal *d, int* shift10) {
     }
   }
   return rv; // 0 ok/// 1 значит мы не можем сдвинуть нужное кол-во раз
-}
-
-void clearBit(s21_decimal *d, int i) {
-  unsigned int mask = 1u << (i % 32);
-  mask = ~mask;
-  d->bits[i / 32] &= mask;
 }
 
 
@@ -401,21 +334,3 @@ int s21_from_int_to_decimal(int src, s21_decimal *dst) {
   }
   return ret_val;
 }
-
-// int main() {
-//   s21_decimal src1;
-//   float dst;
-//   src1.bits[0] = -805306368;
-//   src1.bits[1] = -128223179;
-//   src1.bits[2] = 429496715;
-//   src1.bits[3] = 0;
-//   int code = s21_from_decimal_to_float(src1, &dst);
-//   char var3str[1000];
-//   char result[1000];
-//   snprintf(var3str, 8, "%f", 7922816200000000000000000000.0f);
-//   snprintf(result, 8, "%f", dst);
-//   printf("RES %f\n", roundf(dst));
-//   printf("CODE %d \n", code);
-//   printf("STR ORIG %s\n STR RES %s\n", var3str, dst);
-//   return 0;
-// }

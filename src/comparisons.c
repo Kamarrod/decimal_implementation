@@ -121,11 +121,21 @@ void normilize(s21_decimal numberWithMaxScale, s21_decimal otherNumber,
         multiplyBy10(newNumber);
 }
 
+int isZero(s21_decimal number) {
+    int result = 1;
+    for(int i = 0; i < 3 && result == 1; ++i)
+        if(number.bits[i] != 0)
+            result = 0;
+    
+    return result;
+}
+
 int s21_is_less(s21_decimal first, s21_decimal second)
 {
     int result = -1;
     int firstSign = getSign(first);
     int secondSign = getSign(second);
+
     if(firstSign != secondSign)
     {
         int allZero = 1;
@@ -135,7 +145,12 @@ int s21_is_less(s21_decimal first, s21_decimal second)
         result = allZero ? 0 : firstSign;
     } else {
         int resultByModule = -1;
-        if(getScale(first) == getScale(second))
+        if(isZero(first) || isZero(second))
+        {
+            if(isZero(first) && !isZero(second)) resultByModule = 1;
+            else if(!isZero(first) && isZero(second)) resultByModule = 0;
+        }
+        else if(getScale(first) == getScale(second))
         {
             for(int i = 2; i >= 0 && resultByModule == -1; --i)
                 if(first.bits[i] > second.bits[i])

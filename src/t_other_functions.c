@@ -1105,7 +1105,7 @@ END_TEST
 
 
 
-Suite* suite() {
+Suite* other_functions(void) {
   Suite* s = suite_create("tests");
   TCase* tc = tcase_create("core");
 
@@ -1186,19 +1186,4 @@ Suite* suite() {
   suite_add_tcase(s, tc);
 
   return s;
-}
-
-int main() {
-  int nf;
-  Suite* s = suite();
-  SRunner* sr;
-
-  sr = srunner_create(s);
-
-  srunner_set_fork_status(sr, CK_NOFORK);
-  srunner_run_all(sr, CK_NORMAL);
-
-  nf = srunner_ntests_failed(sr);
-  // srunner_free(sr);
-  return nf == 0 ? 0 : 1;
 }

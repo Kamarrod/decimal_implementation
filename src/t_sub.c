@@ -1573,99 +1573,6 @@ START_TEST(s21_subTest33) {
 }
 END_TEST
 
-// START_TEST(s21_test_decimal_sub_simple_0) {
-//   s21_decimal c = {{10, 0, 0, 0}};
-//   s21_decimal d = {{5, 0, 0, 0}};
-//   s21_decimal etalon = {{5, 0, 0, 0}};
-
-//   s21_decimal res = {{0, 0, 0, 0}};
-//   s21_decimal* p_res = &res;
-//   int add = s21_sub(c, d, p_res);
-//   ck_assert_int_eq(add, 0);
-
-//   int equal = s21_is_equal(res, etalon);
-//   ck_assert_int_eq(equal, S21_TRUE);
-// }
-// END_TEST
-
-// START_TEST(s21_test_decimal_sub_simple_1) {
-//   s21_decimal c = {{100, 0, 0, 0}};
-//   s21_decimal d = {{5, 0, 0, 0}};
-//   s21_decimal etalon = {{5, 0, 0, 0}};
-
-//   s21_decimal res = {{0, 0, 0, 0}};
-//   s21_decimal* p_res = &res;
-//   int add = s21_sub(c, d, p_res);
-//   ck_assert_int_eq(add, 0);
-
-//   int equal = s21_is_equal(res, etalon);
-//   ck_assert_int_eq(equal, S21_FALSE);
-// }
-// END_TEST
-
-// START_TEST(s21_test_decimal_sub_simple_2) {
-//   s21_decimal c = {{INT_MAX, 0, 0, 0}};
-//   s21_decimal d = {{5, 0, 0, 0}};
-//   s21_decimal etalon = {{2147483642, 0, 0, 0}};
-//   s21_decimal res = {{0, 0, 0, 0}};
-//   s21_decimal* p_res = &res;
-//   int add = s21_sub(c, d, p_res);
-//   ck_assert_int_eq(add, 0);
-//   int equal = s21_is_equal(res, etalon);
-//   ck_assert_int_eq(equal, S21_TRUE);
-// }
-// END_TEST
-
-// START_TEST(s21_test_decimal_sub_simple_3) {
-//   s21_decimal c = {{INT_MAX, INT_MAX, 0, 0}};
-//   s21_decimal d = {{5, 0, 0, 0}};
-//   s21_decimal etalon = {{INT_MAX - 5, INT_MAX, 0, 0}};
-//   s21_decimal res = {{0, 0, 0, 0}};
-//   s21_decimal* p_res = &res;
-//   int add = s21_sub(c, d, p_res);
-//   ck_assert_int_eq(add, 0);
-//   int equal = s21_is_equal(res, etalon);
-//   ck_assert_int_eq(equal, S21_TRUE);
-// }
-
-// START_TEST(s21_test_decimal_sub_simple_7) {
-//   s21_decimal c = {{1, 0, 0, 0}};
-//   s21_decimal d = {{1, 0, 0, ~(INT_MAX)}};
-//   s21_decimal etalon = {{2, 0, 0, 0}};
-//   s21_decimal res = {{0, 0, 0, 0}};
-//   s21_decimal* p_res = &res;
-//   int add = s21_sub(c, d, p_res);
-//   ck_assert_int_eq(add, 0);
-//   int equal = s21_is_equal(res, etalon);
-//   ck_assert_int_eq(equal, S21_TRUE);
-// }
-// END_TEST
-
-// START_TEST(s21_test_decimal_sub_simple_8) {
-//   s21_decimal c = {{1, 0, 0, ~(INT_MAX)}};
-//   s21_decimal d = {{1, 0, 0, ~(INT_MAX)}};
-//   s21_decimal etalon = {{0, 0, 0, 0}};
-//   s21_decimal res = {{0, 0, 0, 0}};
-//   s21_decimal* p_res = &res;
-//   int add = s21_sub(c, d, p_res);
-//   ck_assert_int_eq(add, 0);
-//   int equal = s21_is_equal(res, etalon);
-//   ck_assert_int_eq(equal, S21_TRUE);
-// }
-// END_TEST
-
-// START_TEST(s21_test_decimal_sub_simple_10) {
-//   s21_decimal c = {{100, 0, 0, 0}};
-//   s21_decimal d = {{100, 0, 0, ~(INT_MAX)}};
-//   s21_decimal etalon = {{200, 0, 0, 0}};
-//   s21_decimal res = {{0, 0, 0, 0}};
-//   s21_decimal* p_res = &res;
-//   int add = s21_sub(c, d, p_res);
-//   ck_assert_int_eq(add, 0);
-//   int equal = s21_is_equal(res, etalon);
-//   ck_assert_int_eq(equal, S21_TRUE);
-// }
-// END_TEST
 
 START_TEST(s21_test_decimal_sub_simple_11) {
   s21_decimal c = {{100, 0, 0, ~(INT_MAX)}};
@@ -1726,13 +1633,7 @@ Suite *suite_sub(void) {
   tcase_add_test(tc, s21_subTest31);
   tcase_add_test(tc, s21_subTest32);
   tcase_add_test(tc, s21_subTest33);
-  //   tcase_add_test(tc, s21_test_decimal_sub_simple_0);
-  //   tcase_add_test(tc, s21_test_decimal_sub_simple_1);
-  //   tcase_add_test(tc, s21_test_decimal_sub_simple_2);
-  //   tcase_add_test(tc, s21_test_decimal_sub_simple_3);
-  //   tcase_add_test(tc, s21_test_decimal_sub_simple_7);
-  //   tcase_add_test(tc, s21_test_decimal_sub_simple_8);
-  //   tcase_add_test(tc, s21_test_decimal_sub_simple_10);
+
   tcase_add_test(tc, s21_test_decimal_sub_simple_11);
   tcase_add_test(tc, sub_test_11);
   tcase_add_test(tc, sub_test_12);
