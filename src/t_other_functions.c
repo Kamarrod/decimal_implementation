@@ -32,11 +32,8 @@ START_TEST(floor_2) {
 END_TEST
 
 START_TEST(floor_3) {
-  float num1 = 0;
-  float num2 = 0;
   s21_decimal value;
   s21_decimal result;
-  s21_decimal out;
   value.bits[3] = 0;
   value.bits[2] = 0;
   value.bits[1] = 0;
@@ -50,7 +47,6 @@ END_TEST
 
 START_TEST(floor_4) {
   float num1 = 0.1232424;
-  float num2 = 0.0;
   s21_decimal value;
   s21_decimal result;
   s21_decimal out;
@@ -150,7 +146,6 @@ END_TEST
 START_TEST(truncate_4)
 {
   float num1 = 0.12321;
-  float num2 = 0;
   s21_decimal out;
   s21_decimal value;
   s21_decimal result;
@@ -289,7 +284,6 @@ START_TEST(truncate_13) {
 START_TEST(round_1)
 {
   float num1 = -0.12321;
-  float num2 = -0;
   s21_decimal value;
   s21_decimal result;
   s21_decimal out;
@@ -299,6 +293,7 @@ START_TEST(round_1)
   out.bits[0] = 0;
   s21_from_float_to_decimal(num1, &value);
   int res = s21_round(value, &result);
+  ck_assert_int_eq(res, 0);
   for (int i = 0; i < 4; i++)
     ck_assert_int_eq(out.bits[i], result.bits[i]);
 }
@@ -318,6 +313,7 @@ START_TEST(round_2)
   out.bits[0] = 1;
   s21_from_float_to_decimal(num1, &value);
   int res = s21_round(value, &result);
+  ck_assert_int_eq(res, 0);
   for (int i = 0; i < 4; i++)
     ck_assert_int_eq(out.bits[i], result.bits[i]);
 }
@@ -337,6 +333,7 @@ START_TEST(round_3)
   out.bits[0] = 3;
   s21_from_float_to_decimal(num1, &value);
   int res = s21_round(value, &result);
+  ck_assert_int_eq(res, 0);
   for (int i = 0; i < 4; i++)
     ck_assert_int_eq(out.bits[i], result.bits[i]);
 }
@@ -346,7 +343,6 @@ END_TEST
 START_TEST(round_4)
 {
   float num1 = 10.05321;
-  float num2 = -0;
   s21_decimal value;
   s21_decimal result;
   s21_decimal out;
@@ -356,6 +352,7 @@ START_TEST(round_4)
   out.bits[0] = 10;
   s21_from_float_to_decimal(num1, &value);
   int res = s21_round(value, &result);
+  ck_assert_int_eq(res, 0);
   for (int i = 0; i < 4; i++)
     ck_assert_int_eq(out.bits[i], result.bits[i]);
 }
@@ -365,7 +362,6 @@ END_TEST
 START_TEST(round_5)
 {
   float num1 = 2.62321;
-  float num2 = -0;
   s21_decimal value;
   s21_decimal result;
   s21_decimal out;
@@ -375,6 +371,7 @@ START_TEST(round_5)
   out.bits[0] = 3;
   s21_from_float_to_decimal(num1, &value);
   int res = s21_round(value, &result);
+  ck_assert_int_eq(res, 0);
   for (int i = 0; i < 4; i++)
     ck_assert_int_eq(out.bits[i], result.bits[i]);
 }
@@ -393,6 +390,7 @@ START_TEST(round_6)
   out.bits[0] = 0;
   s21_from_float_to_decimal(num1, &value);
   int res = s21_round(value, &result);
+  ck_assert_int_eq(res, 0);
   for (int i = 0; i < 4; i++)
     ck_assert_int_eq(out.bits[i], result.bits[i]);
 }
