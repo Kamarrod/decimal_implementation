@@ -4,6 +4,7 @@ s21_decimal s21_add_bits(s21_decimal *value1, s21_decimal *value2) {
   s21_decimal res = {{0, 0, 0, 0}};
 
   if (s21_are_inf_new(value1, value2)) {
+    // res.value_type = s21_infinity;
     s21_set_inf(&res);
   } else {
     int buffer = 0;
@@ -35,9 +36,18 @@ s21_decimal s21_add_bits(s21_decimal *value1, s21_decimal *value2) {
         }
       }
 
+      // if (i == 95 && buffer == 1 && value1->value_type != s21_ADDCODE &&
+      //     value2->value_type != s21_ADDCODE)
+      //   res.value_type = s21_infinity;
+      // else
+      //   res.value_type = s21_usual;
+
       if (i == 95 && buffer == 1 && s21_get_bit(*value1, 126) != 1 &&
           s21_get_bit(*value2, 126) != 1)
         s21_set_inf(&res);
+      // res.value_type = s21_infinity;
+      //   else
+      //     res.value_type = s21_usual;  // ref
     }
   }
 
@@ -46,6 +56,15 @@ s21_decimal s21_add_bits(s21_decimal *value1, s21_decimal *value2) {
 
 s21_decimal s21_check_boundary(s21_decimal value1, s21_decimal value2) {
   s21_decimal res = {{0, 0, 0, 0}};
+
+  //   res.value_type = value1.value_type > value2.value_type ?
+  //   value1.value_type
+  //                                                          :
+  //                                                          value2.value_type;
+
+  // if (value1.value_type != s21_usual && value2.value_type != s21_usual &&
+  //     value1.value_type != value2.value_type)
+  //     res.value_type = s21_nan;
   if (s21_check_inf(value1) || s21_check_inf(value2)) s21_set_inf(&res);
   return res;
 }
@@ -204,6 +223,7 @@ int s21_last_bit(s21_decimal value) {
 
 void s21_shift_left(s21_decimal *value, int offset) {
   if (s21_last_bit(*value) + offset > 95) {
+    // value->value_type = s21_infinity;
     s21_set_inf(value);
   } else {
     for (int i = 0; i < offset; i++) {
@@ -243,5 +263,6 @@ void to_addcode(s21_decimal *value) {
   value->bits[1] = res.bits[1];
   value->bits[2] = res.bits[2];
 
+  // value->value_type = s21_ADDCODE;
   s21_set_bit(value, 126, 1);  // ref
 }

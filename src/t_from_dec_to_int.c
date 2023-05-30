@@ -86,27 +86,27 @@ END_TEST
 
 
 START_TEST(s21_test_from_decimal_to_int_6) {
-  int code, check, result;
+  int code, result;
   s21_decimal a = {{UINT_MAX, UINT_MAX, 0, 0}};
-  check = 0;
+  // check = 0;
   code = s21_from_decimal_to_int(a, &result);
   ck_assert_int_eq(code, 1);
 }
 END_TEST
 
 START_TEST(s21_test_from_decimal_to_int_7) {
-  int code, check, result;
+  int code, result;
   s21_decimal a = {{UINT_MAX, UINT_MAX, UINT_MAX, 0}};
-  check = 0;
+  // check = 0;
   code = s21_from_decimal_to_int(a, &result);
   ck_assert_int_eq(code, 1);
 }
 END_TEST
 
 START_TEST(s21_test_from_decimal_to_int_8) {
-  int code, check, result;
+  int code, result;
   s21_decimal a = {{UINT_MAX, UINT_MAX, UINT_MAX, UINT_MAX}};
-  check = 0;
+  // check = 0;
   code = s21_from_decimal_to_int(a, &result);
   ck_assert_int_eq(code, 1);
 }

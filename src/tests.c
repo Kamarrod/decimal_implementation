@@ -12,10 +12,10 @@ int main() {
 
   srunner_add_suite(sr,suite_comparisons());
 
-  // srunner_add_suite(sr,suite_add());
-  // srunner_add_suite(sr, suite_div());
-  // srunner_add_suite(sr,suite_mul());
-  // srunner_add_suite(sr,suite_sub());
+  srunner_add_suite(sr,suite_add());
+  srunner_add_suite(sr, suite_div());
+  srunner_add_suite(sr,suite_mul());
+  srunner_add_suite(sr,suite_sub());
 
   srunner_add_suite(sr,other_functions());
 

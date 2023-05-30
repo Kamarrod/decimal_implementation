@@ -39,7 +39,7 @@ int s21_truncate(s21_decimal value, s21_decimal *result) {
   if (result) {
     int exp = convert(value);
     int sign = getSign(value);
-    int sign_op = test_bit(value.bits[3], 31);
+    // int sign_op = test_bit(value.bits[3], 31);
     if (exp != 0) {
         s21_decimal buf = {0};
         buf = value;
@@ -66,7 +66,7 @@ int s21_round(s21_decimal value, s21_decimal *result) {
         } else {
           s21_truncate(value, result);
           s21_decimal one = {{1, 0, 0 ,0}};
-          s21_decimal half_one = {5, 0, 0, 0b10000000000000000};
+          s21_decimal half_one = {{5, 0, 0, 0b10000000000000000}};
           s21_decimal copy = {{value.bits[0],  value.bits[1], value.bits[2], value.bits[3]}};
         if (sign) {
             s21_decimal sub = {{0, 0, 0, 0}};

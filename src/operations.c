@@ -251,6 +251,8 @@ int s21_add(s21_decimal value1, s21_decimal value2, s21_decimal *res) {
 int s21_sub(s21_decimal number_1, s21_decimal number_2, s21_decimal *res) {
   int ret = 0;
   s21_set0bits(res);
+  // res->value_type = number_1.value_type ? number_1.value_type :
+  // number_2.value_type;
   if (s21_check_inf(number_1) || s21_check_inf(number_1)) s21_set_inf(res);
 
   if (!s21_check_inf(*res)) {
@@ -289,8 +291,11 @@ int s21_sub(s21_decimal number_1, s21_decimal number_2, s21_decimal *res) {
       }
     }
   }
+  //   if (res->value_type == s21_infinity) ret = 1;
+  //   if (res->value_type == s21_neg_infinity) ret = 2;
   if (s21_check_inf(*res)) {
     ret = 1;
+    // if (s21_getsign(res)) ret = 2;
     if (s21_getsign(&number_1) || s21_getsign(&number_2)) {
       ret = 2;
       s21_setsign(res, 1);
@@ -298,4 +303,3 @@ int s21_sub(s21_decimal number_1, s21_decimal number_2, s21_decimal *res) {
   }
   return ret;
 }
-

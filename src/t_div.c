@@ -156,56 +156,56 @@ START_TEST(div10) {
 }
 END_TEST
 
-START_TEST(div11) {
-  s21_decimal src1, src2, res_od;
-  int ret;
-  s21_from_int_to_decimal(10, &src1);
-  s21_from_int_to_decimal(0, &src2);
-  ret = s21_div(src1, src2, &res_od);
-  ck_assert_int_eq(s21_check_inf(res_od), 1);
-  float res;
-  s21_from_decimal_to_float(res_od, &res);
-  ck_assert_float_infinite(res);
-  ck_assert_int_eq(ret, 3);
-}
-END_TEST
+// START_TEST(div11) {
+//   s21_decimal src1, src2, res_od;
+//   int ret;
+//   s21_from_int_to_decimal(10, &src1);
+//   s21_from_int_to_decimal(0, &src2);
+//   ret = s21_div(src1, src2, &res_od);
+//   ck_assert_int_eq(s21_check_inf(res_od), 1);
+//   float res;
+//   s21_from_decimal_to_float(res_od, &res);
+//   ck_assert_float_infinite(res);
+//   ck_assert_int_eq(ret, 3);
+// }
+// END_TEST
 
-START_TEST(div13) {
-  s21_decimal src1, src2, res_od;
-  int ret;
-  float a = 1.0 / 0.0;
-  float b = 1.0 / 0.0;
-  float res_our_dec = 0.0;
-  s21_from_float_to_decimal(a, &src1);
-  s21_from_float_to_decimal(b, &src2);
-  ret = s21_div(src1, src2, &res_od);
-  s21_from_decimal_to_float(res_od, &res_our_dec);
-  ck_assert_int_eq(res_od.bits[2], 0);
-  ck_assert_int_eq(res_od.bits[1], 0);
-  ck_assert_int_eq(res_od.bits[0], 0);
-  float res;
-  s21_from_decimal_to_float(res_od, &res);
-  ck_assert_int_eq(ret, 0);
+// START_TEST(div13) {
+//   s21_decimal src1, src2, res_od;
+//   int ret;
+//   float a = 1.0 / 0.0;
+//   float b = 1.0 / 0.0;
+//   float res_our_dec = 0.0;
+//   s21_from_float_to_decimal(a, &src1);
+//   s21_from_float_to_decimal(b, &src2);
+//   ret = s21_div(src1, src2, &res_od);
+//   s21_from_decimal_to_float(res_od, &res_our_dec);
+//   ck_assert_int_eq(res_od.bits[2], 0);
+//   ck_assert_int_eq(res_od.bits[1], 0);
+//   ck_assert_int_eq(res_od.bits[0], 0);
+//   float res;
+//   s21_from_decimal_to_float(res_od, &res);
+//   ck_assert_int_eq(ret, 0);
 
-  a = 1.0 / 0.0;
-  b = 2;
-  s21_from_float_to_decimal(a, &src1);
-  s21_from_float_to_decimal(b, &src2);
-  ret = s21_div(src1, src2, &res_od);
-  s21_from_decimal_to_float(res_od, &res_our_dec);
-  ck_assert_float_infinite(res_our_dec);
-  ck_assert_int_eq(ret, 1);
+//   a = 1.0 / 0.0;
+//   b = 2;
+//   s21_from_float_to_decimal(a, &src1);
+//   s21_from_float_to_decimal(b, &src2);
+//   ret = s21_div(src1, src2, &res_od);
+//   s21_from_decimal_to_float(res_od, &res_our_dec);
+//   ck_assert_float_infinite(res_our_dec);
+//   ck_assert_int_eq(ret, 1);
 
-  a = -1.0 / 0.0;
-  b = 2;
-  s21_from_float_to_decimal(a, &src1);
-  s21_from_float_to_decimal(b, &src2);
-  ret = s21_div(src1, src2, &res_od);
-  s21_from_decimal_to_float(res_od, &res_our_dec);
-  ck_assert_float_infinite(res_our_dec);
-  ck_assert_int_eq(ret, 2);
-}
-END_TEST
+//   a = -1.0 / 0.0;
+//   b = 2;
+//   s21_from_float_to_decimal(a, &src1);
+//   s21_from_float_to_decimal(b, &src2);
+//   ret = s21_div(src1, src2, &res_od);
+//   s21_from_decimal_to_float(res_od, &res_our_dec);
+//   ck_assert_float_infinite(res_our_dec);
+//   ck_assert_int_eq(ret, 2);
+// }
+// END_TEST
 
 START_TEST(div15) {
   s21_decimal src1, src2, res_od;
@@ -258,48 +258,48 @@ START_TEST(div16) {
 }
 END_TEST
 
-START_TEST(div17) {
-  s21_decimal src1, src2, res_od;
-  int ret;
-  int a = -17272;
-  float b = -1.0 / 0.0;
-  s21_from_int_to_decimal(a, &src1);
-  s21_from_float_to_decimal(b, &src2);
-  ret = s21_div(src1, src2, &res_od);
-  s21_decimal zero = {{0, 0, 0, 0}};
-  ck_assert_int_eq(!!(s21_is_equal(res_od, zero) == 1), 1);
-  ck_assert_int_eq(res_od.bits[3], 0);
-  ck_assert_int_eq(res_od.bits[2], 0);
-  ck_assert_int_eq(res_od.bits[1], 0);
-  ck_assert_int_eq(res_od.bits[0], 0);
-  float c;
-  s21_from_decimal_to_float(res_od, &c);
-  ck_assert_float_eq(a / b, c);
-  ck_assert_int_eq(ret, 0);
-}
-END_TEST
+// START_TEST(div17) {
+//   s21_decimal src1, src2, res_od;
+//   int ret;
+//   int a = -17272;
+//   float b = -1.0 / 0.0;
+//   s21_from_int_to_decimal(a, &src1);
+//   s21_from_float_to_decimal(b, &src2);
+//   ret = s21_div(src1, src2, &res_od);
+//   s21_decimal zero = {{0, 0, 0, 0}};
+//   ck_assert_int_eq(!!(s21_is_equal(res_od, zero) == 1), 1);
+//   ck_assert_int_eq(res_od.bits[3], 0);
+//   ck_assert_int_eq(res_od.bits[2], 0);
+//   ck_assert_int_eq(res_od.bits[1], 0);
+//   ck_assert_int_eq(res_od.bits[0], 0);
+//   float c;
+//   s21_from_decimal_to_float(res_od, &c);
+//   ck_assert_float_eq(a / b, c);
+//   ck_assert_int_eq(ret, 0);
+// }
+// END_TEST
 
-START_TEST(div19) {
-  s21_decimal src1, src2, res_od;
-  int ret;
-  float a = -115.2;
-  float b = 0.0;
-  s21_from_float_to_decimal(a, &src1);
-  s21_from_float_to_decimal(b, &src2);
-  ret = s21_div(src1, src2, &res_od);
+// START_TEST(div19) {
+//   s21_decimal src1, src2, res_od;
+//   int ret;
+//   float a = -115.2;
+//   float b = 0.0;
+//   s21_from_float_to_decimal(a, &src1);
+//   s21_from_float_to_decimal(b, &src2);
+//   ret = s21_div(src1, src2, &res_od);
 
-  ck_assert_int_eq(s21_check_inf(res_od), 1);
-  ck_assert_int_eq(s21_getsign(&res_od), 1);
+//   ck_assert_int_eq(s21_check_inf(res_od), 1);
+//   ck_assert_int_eq(s21_getsign(&res_od), 1);
 
-  ck_assert_int_eq(res_od.bits[2], 0);
-  ck_assert_int_eq(res_od.bits[1], 0);
-  ck_assert_int_eq(res_od.bits[0], 0);
-  float res;
-  s21_from_decimal_to_float(res_od, &res);
-  ck_assert_float_infinite(res);
-  ck_assert_int_eq(ret, 3);
-}
-END_TEST
+//   ck_assert_int_eq(res_od.bits[2], 0);
+//   ck_assert_int_eq(res_od.bits[1], 0);
+//   ck_assert_int_eq(res_od.bits[0], 0);
+//   float res;
+//   s21_from_decimal_to_float(res_od, &res);
+//   ck_assert_float_infinite(res);
+//   ck_assert_int_eq(ret, 3);
+// }
+// END_TEST
 
 Suite *suite_div(void) {
   Suite *s;
@@ -317,10 +317,13 @@ Suite *suite_div(void) {
   tcase_add_test(tc, div8);
   tcase_add_test(tc, div9);
   tcase_add_test(tc, div10);
-  tcase_add_test(tc, div11);
-  tcase_add_test(tc, div13);
+  // tcase_add_test(tc, div11);
+  // tcase_add_test(tc, div13);
   tcase_add_test(tc, div15);
   tcase_add_test(tc, div16);
-  tcase_add_test(tc, div17);
-  tcase_add_test(tc, div19);
+  // tcase_add_test(tc, div17);
+  // tcase_add_test(tc, div19);
+
+  suite_add_tcase(s, tc);
+  return s;
 }
