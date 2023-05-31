@@ -8,14 +8,6 @@ START_TEST(s21_float_000) {
 }
 END_TEST
 
-// START_TEST(s21_float_00) {
-//   float inp = 2;
-//   s21_decimal *out = NULL;
-//   int error = s21_from_float_to_decimal(inp, out);
-//   ck_assert_ptr_eq(out, NULL);
-//   ck_assert_int_eq(error, 1);
-// }
-// END_TEST
 START_TEST(s21_float_0) {
   float inp = 2;
   s21_decimal out = {{0, 0, 0, 0}};
