@@ -24,7 +24,7 @@ test: s21_decimal.a
 #  ./test
 
 valgrind: clean test
-# valgrind --tool=memcheck --vgdb=no --trace-children=yes --log-file=RESULT_VALGRIND.log ./test
+	valgrind --tool=memcheck --vgdb=no --trace-children=yes --log-file=RESULT_VALGRIND.log ./test
 
 # s21_decimal.a:
 # 	$(CC) $(CFLAGS) -c $(SRC)

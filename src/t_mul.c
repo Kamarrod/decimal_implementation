@@ -114,7 +114,7 @@ START_TEST(mul5) {
 END_TEST
 
 START_TEST(mul6) {
-  s21_decimal src1, src2, res_od;
+  s21_decimal src1 = {0}, src2 = {0}, res_od = {0};
   float a = 1.0 / 0.0;
   int b = 0;
   float res_our_dec = 0.0;
@@ -167,7 +167,7 @@ END_TEST
 // END_TEST
 
 START_TEST(mul9) {
-  s21_decimal src1, src2, res_od;
+  s21_decimal src1 = {0}, src2 = {0}, res_od = {0};
   float a = 1.0 / 0.0;
   float b = 0.0 * 2 / 3 * 0.0;
   float res_our_dec = 0.0;
@@ -280,7 +280,7 @@ END_TEST
 // END_TEST
 
 START_TEST(mul15) {
-  s21_decimal src1, src2, res_od;
+  s21_decimal src1 = {0}, src2 = {0}, res_od = {0};
   float a = 1.0 / 0.0;
   int b = 0;
   float res_our_dec = 0.0;
@@ -295,7 +295,7 @@ START_TEST(mul15) {
 END_TEST
 
 START_TEST(mul16) {
-  s21_decimal src1, src2, res_od;
+  s21_decimal src1 = {0}, src2 = {0}, res_od = {0};
   float a = -1.0 / 0.0;
   float b = 0.0 * 2 / 3 * 0.0;
   float res_our_dec = 0.0;
@@ -310,7 +310,7 @@ START_TEST(mul16) {
 END_TEST
 
 START_TEST(mul17) {
-  s21_decimal src1, src2, res_od;
+  s21_decimal src1 = {0}, src2 = {0}, res_od = {0};
   float a = -1.0 / 0.0;
   float b = 0.0 * 2 / 3 * 0.0;
   float res_our_dec = 0.0;
