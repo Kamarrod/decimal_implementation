@@ -1,6 +1,5 @@
 CC = gcc
 CFLAGS = -Wall -Werror -Wextra -std=c11
-LDFLAGS= -Wall -Werror -Wextra -lcheck -lpthread -lm -lsubunit
 
 T_COMPARISONS=t_comparisons.c
 T_CONVERTERS=t_from_dec_to_float.c t_from_dec_to_int.c t_from_float_to_dec.c t_from_int_to_dec.c
@@ -11,6 +10,17 @@ SRC = converters.c comparisons.c other_functions.c operations.c functions.c
 
 TST_LIBS = $(shell pkg-config --libs check)
 
+ifeq ($(OS), Darwin)
+	OPEN_CMD = open
+	ADD_FLAGS =
+endif
+
+ifeq ($(OS), Linux)
+	OPEN_CMD = xdg-open
+	ADD_FLAGS = -lrt -lpthread -lm -lsubunit
+endif
+
+
 all: clean
 
 s21_decimal.a:
@@ -19,22 +29,12 @@ s21_decimal.a:
 	ranlib s21_decimal.a
 
 test: s21_decimal.a
-	$(CC) $^ $(T_COMPARISONS) $(T_CONVERTERS) $(T_OTHERFUNCS) $(T_ARIFM) comparisons.c operations.c converters.c functions.c other_functions.c tests.c $(LDFLAGS) -g -o test
+	$(CC) $^ $(T_COMPARISONS) $(T_CONVERTERS) $(T_OTHERFUNCS) $(T_ARIFM) comparisons.c operations.c converters.c functions.c other_functions.c tests.c $(CFLAGS) $(ADD_FLAGS) -lcheck -g -o test
 	rm -rf *.o
-#  ./test
+	./test
 
 valgrind: clean test
 	valgrind --tool=memcheck --vgdb=no --trace-children=yes --log-file=RESULT_VALGRIND.log ./test
-
-# s21_decimal.a:
-# 	$(CC) $(CFLAGS) -c $(SRC)
-# 	ar -rcs s21_decimal.a ./*.o
-# 	ranlib s21_decimal.a
-
-# test: s21_decimal.a
-# 	$(CC) $(CFLAGS) $^ $(T_COMPARISONS) $(T_CONVERTERS) $(T_OTHERFUNCS) $(T_ARIFM) tests.c $(TST_LIBS) -o test
-# 	rm -rf *.o
-# 	./test
 
 gcov_report:
 # gcc s21_math.c tests.c -o gcov_check.out $(TST_LIBS) --coverage
@@ -54,6 +54,7 @@ clang:
 clean:
 	rm -rf *.o
 	rm -rf *.a
+	rm -rf *.log
 	rm -rf test
 	rm -rf report
 	rm -rf *.gcda *.gcno *.gcov
