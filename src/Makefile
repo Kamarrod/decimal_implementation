@@ -54,6 +54,7 @@ clang:
 clean:
 	rm -rf *.o
 	rm -rf *.a
+	rm -rf *.log
 	rm -rf test
 	rm -rf report
 	rm -rf *.gcda *.gcno *.gcov
