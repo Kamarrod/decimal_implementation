@@ -94,11 +94,12 @@ int get_scale_n_right_form(int *scale, double dinp, double *rf,
     _mult_10_dec(dst, &tshift); //*10 децимал - нет потери точности
   } else {        //значит часть до точки короче 7
     int i, j = 0; // j (подсчет общего сдвига),
-    int can_shift = 28, limit_mult10 = 7; //зацепляем 28 символов после точки
+    int limit_mult10 = 7; //зацепляем 28 символов после точки
     for (; !(int)dinp && j < 28; dinp *= 10, j++) {
       *(scale) += 1;
     }
     if (*scale > 0) { // число по длине меньше 1, сдвигали до головы
+      int can_shift = 28;
       can_shift -= j;
       i = 1;
       if (can_shift < 7 && can_shift >= 0) {
@@ -167,7 +168,8 @@ int add_dec_no_scale(s21_decimal value_1, s21_decimal value_2,
     } else if (top || bot) {
       if (!temp)
         setBit(result, i);
-    } else if (!top && !bot && temp) {
+    } else if (temp) {
+    // } else if (!top && !bot && temp) {
       setBit(result, i);
       temp = 0;
     }
@@ -231,8 +233,9 @@ int s21_from_float_to_decimal(float src, s21_decimal *dst) {
     // for (int i = 0; i < 4; i++)
     //   dst->bits[i] = 0;
     memset(dst, 0, sizeof(s21_decimal));
-    int neg = 0, scale = 0;
+    int scale = 0;
     if(src!=0) {
+        int neg = 0;
         double rf = src;
         if (rf < 0) {
           neg = 1;
