@@ -3,8 +3,8 @@
 #include <limits.h>
 #include <math.h>
 #include <stdio.h>
-
-#include "check.h"
+#include <stdlib.h>
+#include <string.h>
 
 #define s21_INFINITY 1.0 / 0.0
 #define s21_NAN -0.0 / 0.0
@@ -65,16 +65,5 @@ int s21_last_bit(s21_decimal value);
 void s21_shift_left(s21_decimal *value, int offset);
 s21_decimal check_for_mul(s21_decimal value1, s21_decimal value2);
 void to_addcode(s21_decimal *value);
-
-Suite *test_from_float_to_decimal(void);
-Suite *suite_from_decimal_to_float(void);
-Suite *suite_from_int_to_decimal(void);
-Suite *suite_from_decimal_to_int(void);
-Suite *suite_comparisons(void);
-Suite *suite_add(void);
-Suite *suite_div(void);
-Suite *suite_mul(void);
-Suite *suite_sub(void);
-Suite *other_functions(void);
 
 #endif  // S21_DECIMAL_H

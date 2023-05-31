@@ -1,6 +1,3 @@
-#include <math.h>
-#include <stdlib.h>
-
 #include "s21_decimal.h"
 
 int max(int first, int second) { return first >= second ? first : second; }

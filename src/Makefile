@@ -21,7 +21,7 @@ ifeq ($(OS), Linux)
 endif
 
 
-all: clean
+all: clean test
 
 s21_decimal.a:
 	$(CC) $(CFLAGS) -c $(SRC)
@@ -34,11 +34,10 @@ test: s21_decimal.a
 	./test
 
 valgrind: clean test
-	valgrind --tool=memcheck --vgdb=no --trace-children=yes --log-file=RESULT_VALGRIND.log ./test
+	valgrind --tool=memcheck --vgdb=no --trace-children=yes ./test
 
 gcov_report:
-# gcc s21_math.c tests.c -o gcov_check.out $(TST_LIBS) --coverage
-	$(CC) $(T_COMPARISONS) $(T_CONVERTERS) $(T_OTHERFUNCS) $(T_ARIFM) $(SRC) tests.c -o gcov_check.out $(TST_LIBS) --coverage
+	$(CC) $(T_COMPARISONS) $(T_CONVERTERS) $(T_OTHERFUNCS) $(T_ARIFM) $(SRC) tests.c -o gcov_check.out $(TST_LIBS) -lcheck --coverage
 	./gcov_check.out
 	lcov -t "gcheck" -o gcheck.info -c -d . 
 	genhtml -o report gcheck.info
@@ -47,8 +46,6 @@ gcov_report:
 clang:
 	cp ../materials/linters/.clang-format .
 	clang-format -i *.c *.h
-# clang-format -n *.c
-# clang-format -n *.h
 
 
 clean:

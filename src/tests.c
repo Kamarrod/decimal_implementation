@@ -1,3 +1,8 @@
+#include "tests.h"
+
+#include <limits.h>
+#include <math.h>
+
 #include "s21_decimal.h"
 
 int main() {
