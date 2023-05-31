@@ -62,46 +62,49 @@
 
 CC = gcc
 CFLAGS = -Wall -Werror -Wextra -std=c11
-OBJ_DIR = obj
-GCOV_DIR = gcov
-PROJECT_NAME = s21_decimal
-TEST_SRC = $(PROJECT_NAME)_test.c
-LIB_SRC_DIR = functions
-TEST_BIN = $(OBJ_DIR)/tests/$(PROJECT_NAME)_test
-OS := $(shell uname -s)
-LIB_SOURCES = $(shell find $(LIB_SRC_DIR) -name '*.c')
-OBJS = $(patsubst %.c, $(OBJ_DIR)/%.o, $(LIB_SOURCES))
-HS = $(shell find . -name '*.h')
-TEST_FLAGS = -lcheck
+LDFLAGS= -Wall -Werror -Wextra -lcheck -lpthread -lm -lsubunit
 
-ifeq ($(OS), Darwin)
-	OPEN_CMD = open
-	ADD_FLAGS =
-endif
+T_COMPARISONS=t_comparisons.c
+T_CONVERTERS=t_from_dec_to_float.c t_from_dec_to_int.c t_from_float_to_dec.c t_from_int_to_dec.c
+T_OTHERFUNCS=t_other_functions.c
+T_ARIFM=t_add.c t_mul.c t_div.c t_sub.c
 
-ifeq ($(OS), Linux)
-	OPEN_CMD = xdg-open
-	ADD_FLAGS = -lrt -lpthread -lm -lsubunit
-endif
+SRC = converters.c comparisons.c other_functions.c operations.c functions.c
 
-$(OBJ_DIR)/%.o: %.c $(HS)
-	$(CC) $(CFLAGS) $(ADD_FLAGS) -I . $< -c -o $@
+TST_LIBS = $(shell pkg-config --libs check)
 
-create_obj_files: $(OBJS)
+all: clean
 
-$(PROJECT_NAME).a: create_obj_files
-	ar rcs $@ $(OBJ_DIR)/$(LIB_SRC_DIR)/*.o
-	ranlib $@
+s21_decimal.a:
+	$(CC) $(CFLAGS) -c -g $(SRC)
+	ar -rcs s21_decimal.a ./*.o
+	ranlib s21_decimal.a
 
-test: $(TEST_SRC) $(PROJECT_NAME).a
-	$(CC) $(CFLAGS) $^ -o $(TEST_BIN) $(TEST_FLAGS) $(ADD_FLAGS)
-	@echo s21_string: Check leaks
-ifeq ($(OS), Linux)
-	valgrind --tool=memcheck --vgdb=no --trace-children=yes --log-file=RESULT_VALGRIND.log ./$(TEST_BIN)
-# tail -n 9 RESULT_VALGRIND.log
-else
-	leaks -quiet --atExit -- ./$(TEST_BIN)
-endif
+test: s21_decimal.a
+	$(CC) $^ $(T_COMPARISONS) $(T_CONVERTERS) $(T_OTHERFUNCS) $(T_ARIFM) comparisons.c operations.c converters.c functions.c other_functions.c tests.c $(LDFLAGS) -g -o test
+	rm -rf *.o
+#  ./test
+
+valgrind: clean test
+	valgrind --tool=memcheck --vgdb=no --trace-children=yes --log-file=RESULT_VALGRIND.log ./test
+
+# s21_decimal.a:
+# 	$(CC) $(CFLAGS) -c $(SRC)
+# 	ar -rcs s21_decimal.a ./*.o
+# 	ranlib s21_decimal.a
+
+# test: s21_decimal.a
+# 	$(CC) $(CFLAGS) $^ $(T_COMPARISONS) $(T_CONVERTERS) $(T_OTHERFUNCS) $(T_ARIFM) tests.c $(TST_LIBS) -o test
+# 	rm -rf *.o
+# 	./test
+
+gcov_report:
+# gcc s21_math.c tests.c -o gcov_check.out $(TST_LIBS) --coverage
+	$(CC) $(T_COMPARISONS) $(T_CONVERTERS) $(T_OTHERFUNCS) $(T_ARIFM) $(SRC) tests.c -o gcov_check.out $(TST_LIBS) --coverage
+	./gcov_check.out
+	lcov -t "gcheck" -o gcheck.info -c -d . 
+	genhtml -o report gcheck.info
+	open ./report/index.html
 
 clang:
 	cp ../materials/linters/.clang-format .
@@ -145,12 +148,11 @@ clean:
 	rm -rf report/
 	rm -rf *.dSYM
 	rm -rf *.a
-	rm -rf RESULT_VALGRIND.log
-	rm -rf $(GCOV_DIR)/*
-	rm -rf $(OBJ_DIR)/$(LIB_SRC_DIR)/*.o
-	rm -rf $(OBJ_DIR)/$(LIB_SRC_DIR)/*.gcno
-	rm -rf $(OBJ_DIR)/tests/*.gcno
-	rm -rf $(TEST_BIN)
-	clear
+	rm -rf test
+	rm -rf report
+	rm -rf *.gcda *.gcno *.gcov
+	rm -rf .clang-format
+	rm -rf *.out
+	rm -rf gcheck.info
 
 .PHONY: test gcov_report clean all $(PROJECT_NAME).a add_report_flags clang clang-replace
