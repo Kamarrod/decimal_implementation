@@ -19,13 +19,13 @@ s21_decimal.a:
 	ranlib s21_decimal.a
 
 test: s21_decimal.a
-	$(CC) $(CFLAGS) $^ $(T_COMPARISONS) $(T_CONVERTERS) $(T_OTHERFUNCS) $(T_ARIFM) comparisons.c operations.c converters.c functions.c other_functions.c tests.c $(TST_LIBS) -o test
+	$(CC) $(CFLAGS) $^ $(T_COMPARISONS) $(T_CONVERTERS) $(T_OTHERFUNCS) $(T_ARIFM) tests.c $(TST_LIBS) -o test
 	rm -rf *.o
 	./test
 
 gcov_report:
 # gcc s21_math.c tests.c -o gcov_check.out $(TST_LIBS) --coverage
-	$(CC) $(T_COMPARISONS) $(T_CONVERTERS) $(T_OTHERFUNCS) $(T_ARIFM) comparisons.c operations.c converters.c functions.c other_functions.c tests.c -o gcov_check.out $(TST_LIBS) --coverage
+	$(CC) $(T_COMPARISONS) $(T_CONVERTERS) $(T_OTHERFUNCS) $(T_ARIFM) $(SRC) tests.c -o gcov_check.out $(TST_LIBS) --coverage
 	./gcov_check.out
 	lcov -t "gcheck" -o gcheck.info -c -d . 
 	genhtml -o report gcheck.info
