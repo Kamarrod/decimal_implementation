@@ -6,7 +6,7 @@ T_CONVERTERS=t_from_dec_to_float.c t_from_dec_to_int.c t_from_float_to_dec.c t_f
 T_OTHERFUNCS=t_other_functions.c
 T_ARIFM=t_add.c t_mul.c t_div.c t_sub.c
 
-SRC = converters.c comparisons.c other_functions.c operations.c functions.c
+SRC = converters.c comparisons.c other_functions.c functions.c
 
 TST_LIBS = $(shell pkg-config --libs check)
 
@@ -24,12 +24,12 @@ endif
 all: clean
 
 s21_decimal.a:
-	$(CC) $(CFLAGS) -c -g $(SRC)
+	$(CC) $(CFLAGS) -c $(SRC)
 	ar -rcs s21_decimal.a ./*.o
 	ranlib s21_decimal.a
 
 test: s21_decimal.a
-	$(CC) $^ $(T_COMPARISONS) $(T_CONVERTERS) $(T_OTHERFUNCS) $(T_ARIFM) comparisons.c operations.c converters.c functions.c other_functions.c tests.c $(CFLAGS) $(ADD_FLAGS) -lcheck -g -o test
+	$(CC) $^ $(T_COMPARISONS) $(T_CONVERTERS) $(T_OTHERFUNCS) $(T_ARIFM) $(SRC) tests.c $(CFLAGS) $(ADD_FLAGS) -lcheck -o test
 	rm -rf *.o
 	./test
 
@@ -45,7 +45,7 @@ gcov_report:
 	open ./report/index.html
 
 clang:
-# cp ../materials/linters/.clang-format .
+	cp ../materials/linters/.clang-format .
 	clang-format -i *.c *.h
 # clang-format -n *.c
 # clang-format -n *.h

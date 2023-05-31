@@ -61,7 +61,7 @@ START_TEST(s21_from_decimal_to_int_5) {
   src.bits[0] = 18;
   src.bits[1] = 0;
   src.bits[2] = 0;
-  src.bits[3] = c; // 2147483648
+  src.bits[3] = c;  // 2147483648
   result = s21_from_decimal_to_int(src, &number);
   ck_assert_int_eq(number, -18);
   ck_assert_int_eq(result, 0);
@@ -81,9 +81,6 @@ START_TEST(s21_from_decimal_to_int_6) {
   ck_assert_int_eq(result, 1);
 }
 END_TEST
-
-
-
 
 START_TEST(s21_test_from_decimal_to_int_6) {
   int code, result;
@@ -112,20 +109,16 @@ START_TEST(s21_test_from_decimal_to_int_8) {
 }
 END_TEST
 
-
-
-
 START_TEST(s21_test_from_decimal_to_int_12) {
   int code, check, result;
   s21_decimal a = {{0, 0, 0, 0}};
   setBit(&a, 127);
-  check = 0;  
+  check = 0;
   code = s21_from_decimal_to_int(a, &result);
   ck_assert_int_eq(result, check);
   ck_assert_int_eq(code, 0);
 }
 END_TEST
-
 
 START_TEST(s21_test_from_decimal_to_int_16) {
   int code, check, result;
@@ -412,33 +405,29 @@ Suite *suite_from_decimal_to_int(void) {
   tcase_add_test(tc, s21_from_decimal_to_int_5);
   tcase_add_test(tc, s21_from_decimal_to_int_6);
 
+  tcase_add_test(tc, s21_test_from_decimal_to_int_6);
+  tcase_add_test(tc, s21_test_from_decimal_to_int_7);
+  tcase_add_test(tc, s21_test_from_decimal_to_int_8);
 
+  tcase_add_test(tc, s21_test_from_decimal_to_int_12);
 
-    tcase_add_test(tc, s21_test_from_decimal_to_int_6);
-    tcase_add_test(tc, s21_test_from_decimal_to_int_7);
-    tcase_add_test(tc, s21_test_from_decimal_to_int_8);
-
-
-    tcase_add_test(tc, s21_test_from_decimal_to_int_12);
-
-
-    tcase_add_test(tc, s21_test_from_decimal_to_int_16);
-    tcase_add_test(tc, s21_test_from_decimal_to_int_17);
-    tcase_add_test(tc, s21_from_decimal_to_intTest1);
-    tcase_add_test(tc, s21_from_decimal_to_intTest2);
-    tcase_add_test(tc, s21_from_decimal_to_intTest3);
-    tcase_add_test(tc, s21_from_decimal_to_intTest4);
-    tcase_add_test(tc, s21_from_decimal_to_intTest5);
-    tcase_add_test(tc, s21_from_decimal_to_intTest6);
-    tcase_add_test(tc, s21_from_decimal_to_intTest7);
-    tcase_add_test(tc, s21_from_decimal_to_intTest8);
-    tcase_add_test(tc, s21_from_decimal_to_intTest9);
-    tcase_add_test(tc, s21_from_decimal_to_intTest10);
-    tcase_add_test(tc, s21_from_decimal_to_intTest11);
-    tcase_add_test(tc, s21_from_decimal_to_intTest12);
-    tcase_add_test(tc, s21_from_decimal_to_intTest13);
-    tcase_add_test(tc, s21_from_decimal_to_intTest14);
-    tcase_add_test(tc, s21_from_decimal_to_intTest15);
+  tcase_add_test(tc, s21_test_from_decimal_to_int_16);
+  tcase_add_test(tc, s21_test_from_decimal_to_int_17);
+  tcase_add_test(tc, s21_from_decimal_to_intTest1);
+  tcase_add_test(tc, s21_from_decimal_to_intTest2);
+  tcase_add_test(tc, s21_from_decimal_to_intTest3);
+  tcase_add_test(tc, s21_from_decimal_to_intTest4);
+  tcase_add_test(tc, s21_from_decimal_to_intTest5);
+  tcase_add_test(tc, s21_from_decimal_to_intTest6);
+  tcase_add_test(tc, s21_from_decimal_to_intTest7);
+  tcase_add_test(tc, s21_from_decimal_to_intTest8);
+  tcase_add_test(tc, s21_from_decimal_to_intTest9);
+  tcase_add_test(tc, s21_from_decimal_to_intTest10);
+  tcase_add_test(tc, s21_from_decimal_to_intTest11);
+  tcase_add_test(tc, s21_from_decimal_to_intTest12);
+  tcase_add_test(tc, s21_from_decimal_to_intTest13);
+  tcase_add_test(tc, s21_from_decimal_to_intTest14);
+  tcase_add_test(tc, s21_from_decimal_to_intTest15);
 
   suite_add_tcase(s, tc);
   return s;

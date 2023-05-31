@@ -527,8 +527,7 @@ START_TEST(add_10) {
 END_TEST
 
 START_TEST(add_11) {
-  s21_decimal val1 = {
-      {UINT_MAX, UINT_MAX, UINT_MAX, ~(UINT_MAX / 2)}};
+  s21_decimal val1 = {{UINT_MAX, UINT_MAX, UINT_MAX, ~(UINT_MAX / 2)}};
   s21_decimal val2 = {{4, 0, 0, 0}};
   s21_decimal res = {0};
   ck_assert_int_eq(0, s21_add(val1, val2, &res));
@@ -554,8 +553,7 @@ END_TEST
 
 START_TEST(add_14) {
   s21_decimal val1 = {{4, 0, 0, 0}};
-  s21_decimal val2 = {
-      {UINT_MAX, UINT_MAX, UINT_MAX, ~(UINT_MAX / 2)}};
+  s21_decimal val2 = {{UINT_MAX, UINT_MAX, UINT_MAX, ~(UINT_MAX / 2)}};
   s21_decimal res = {0};
   ck_assert_int_eq(0, s21_add(val1, val2, &res));
 }
@@ -763,30 +761,30 @@ Suite *suite_add(void) {
   // tcase_add_test(tc, add_test_28);
   tcase_add_test(tc, add_test_29);
   // tcase_add_test(tc, add_test_30);
-    tcase_add_test(tc, s21_add_max_31);
-    tcase_add_test(tc, s21_add_max_32);
-    tcase_add_test(tc, s21_add_max_33);
-    // tcase_add_test(tc, s21_add_max_34);
-    // tcase_add_test(tc, s21_add_max_35);
-    tcase_add_test(tc, s21_add_max_36);
-    tcase_add_test(tc, add_test_37);
-    tcase_add_test(tc, add_0);
-    tcase_add_test(tc, add_1);
-    tcase_add_test(tc, add_2);
-    // tcase_add_test(tc, add_3);
-    tcase_add_test(tc, add_4);
-    tcase_add_test(tc, add_5);
-    tcase_add_test(tc, add_6);
-    tcase_add_test(tc, add_7);
-    tcase_add_test(tc, add_8);
-    tcase_add_test(tc, add_9);
-    tcase_add_test(tc, add_10);
-    tcase_add_test(tc, add_11);
-    // tcase_add_test(tc, add_12);
-    tcase_add_test(tc, add_13);
-    tcase_add_test(tc, add_14);
-    tcase_add_test(tc, add_15);
-    // tcase_add_test(tc, add_16);
+  tcase_add_test(tc, s21_add_max_31);
+  tcase_add_test(tc, s21_add_max_32);
+  tcase_add_test(tc, s21_add_max_33);
+  // tcase_add_test(tc, s21_add_max_34);
+  // tcase_add_test(tc, s21_add_max_35);
+  tcase_add_test(tc, s21_add_max_36);
+  tcase_add_test(tc, add_test_37);
+  tcase_add_test(tc, add_0);
+  tcase_add_test(tc, add_1);
+  tcase_add_test(tc, add_2);
+  // tcase_add_test(tc, add_3);
+  tcase_add_test(tc, add_4);
+  tcase_add_test(tc, add_5);
+  tcase_add_test(tc, add_6);
+  tcase_add_test(tc, add_7);
+  tcase_add_test(tc, add_8);
+  tcase_add_test(tc, add_9);
+  tcase_add_test(tc, add_10);
+  tcase_add_test(tc, add_11);
+  // tcase_add_test(tc, add_12);
+  tcase_add_test(tc, add_13);
+  tcase_add_test(tc, add_14);
+  tcase_add_test(tc, add_15);
+  // tcase_add_test(tc, add_16);
 
   suite_add_tcase(s, tc);
   return s;

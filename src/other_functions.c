@@ -40,15 +40,15 @@ int s21_truncate(s21_decimal value, s21_decimal *result) {
     int exp = convert(value);
     int sign = getSign(value);
     if (exp != 0) {
-        s21_decimal buf = {0};
-        buf = value;
-        s21_truncate_buf(&buf, exp);
-        *result = buf;
+      s21_decimal buf = {0};
+      buf = value;
+      s21_truncate_buf(&buf, exp);
+      *result = buf;
     } else {
-        *result = value;
+      *result = value;
     }
     if (sign) {
-        setBit(result, 127);
+      setBit(result, 127);
     }
     rv = 0;
   }
@@ -56,62 +56,63 @@ int s21_truncate(s21_decimal value, s21_decimal *result) {
 }
 
 int s21_round(s21_decimal value, s21_decimal *result) {
-    int rv = 1;
-    if(result && !s21_check_inf(value))
-    {
-        int sign = getSign(value);
-        if (getScale(value) == 0) {
-            *result = value;
-        } else {
-          s21_truncate(value, result);
-          s21_decimal one = {{1, 0, 0 ,0}};
-          s21_decimal half_one = {{5, 0, 0, 0b10000000000000000}};
-          s21_decimal copy = {{value.bits[0],  value.bits[1], value.bits[2], value.bits[3]}};
-        if (sign) {
-            s21_decimal sub = {{0, 0, 0, 0}};
-            s21_sub(*result, copy, &sub);
-            if(s21_is_greater_or_equal(sub, half_one) == 1) {
-                    s21_decimal resultCopy = {{result->bits[0],  result->bits[1], result->bits[2], result->bits[3]}};
-                    s21_sub(resultCopy, one, result);
-                }
-        } else {
-            s21_decimal sub = {{0,0,0,0}};
-            s21_sub(copy, *result, &sub);
-            if(s21_is_greater_or_equal(sub, half_one) == 1) {
-                  s21_decimal resultCopy = {{result->bits[0],  result->bits[1], result->bits[2], result->bits[3]}};
-                  s21_add(resultCopy, one, result);
-                }
+  int rv = 1;
+  if (result && !s21_check_inf(value)) {
+    int sign = getSign(value);
+    if (getScale(value) == 0) {
+      *result = value;
+    } else {
+      s21_truncate(value, result);
+      s21_decimal one = {{1, 0, 0, 0}};
+      s21_decimal half_one = {{5, 0, 0, 0b10000000000000000}};
+      s21_decimal copy = {
+          {value.bits[0], value.bits[1], value.bits[2], value.bits[3]}};
+      if (sign) {
+        s21_decimal sub = {{0, 0, 0, 0}};
+        s21_sub(*result, copy, &sub);
+        if (s21_is_greater_or_equal(sub, half_one) == 1) {
+          s21_decimal resultCopy = {{result->bits[0], result->bits[1],
+                                     result->bits[2], result->bits[3]}};
+          s21_sub(resultCopy, one, result);
         }
+      } else {
+        s21_decimal sub = {{0, 0, 0, 0}};
+        s21_sub(copy, *result, &sub);
+        if (s21_is_greater_or_equal(sub, half_one) == 1) {
+          s21_decimal resultCopy = {{result->bits[0], result->bits[1],
+                                     result->bits[2], result->bits[3]}};
+          s21_add(resultCopy, one, result);
         }
-        rv = 0;
+      }
     }
-    if (result && (s21_check_inf(value))) {
-        *result = value;
-        rv = 0;
-    }
-    return rv;
+    rv = 0;
+  }
+  if (result && (s21_check_inf(value))) {
+    *result = value;
+    rv = 0;
+  }
+  return rv;
 }
 
 int s21_floor(s21_decimal value, s21_decimal *result) {
-    int rv = 1;
-    if (result) {
-        if (s21_check_inf(value)) {
-            *result = value;
-        } else {
-            int scale = getScale(value);
-            s21_truncate(value, result);
-            if (getSign(value)) {
-                if (scale != 0) {
-                    s21_decimal one = {{1, 0, 0 ,0}};
-                    s21_sub(*result, one, result);
-                }
-            }
+  int rv = 1;
+  if (result) {
+    if (s21_check_inf(value)) {
+      *result = value;
+    } else {
+      int scale = getScale(value);
+      s21_truncate(value, result);
+      if (getSign(value)) {
+        if (scale != 0) {
+          s21_decimal one = {{1, 0, 0, 0}};
+          s21_sub(*result, one, result);
         }
-        rv = 0;
+      }
     }
-    return rv;
+    rv = 0;
+  }
+  return rv;
 }
-
 
 int s21_negate(s21_decimal value, s21_decimal *result) {
   int rv = 1;
@@ -121,12 +122,12 @@ int s21_negate(s21_decimal value, s21_decimal *result) {
     result->bits[2] = value.bits[2];
     result->bits[3] = value.bits[3];
     if (!getSign(value)) {
-        setBit(result, 127);
+      setBit(result, 127);
     } else {
-        int  i = 127;
-        unsigned int mask = 1u << (i % 32);
-        mask = ~mask;
-        result->bits[i / 32] &= mask;
+      int i = 127;
+      unsigned int mask = 1u << (i % 32);
+      mask = ~mask;
+      result->bits[i / 32] &= mask;
     }
     rv = 0;
   }

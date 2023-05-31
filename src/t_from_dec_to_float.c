@@ -267,11 +267,10 @@ START_TEST(s21_from_decimal_to_float_17) {
   src1.bits[2] = 429496715;
   src1.bits[3] = 0;
   int code = s21_from_decimal_to_float(src1, &dst);
-  ck_assert_double_eq_tol(dst, check, 5e+21); //те разница в 8 цифре меньше 0,5
+  ck_assert_double_eq_tol(dst, check, 5e+21);  //те разница в 8 цифре меньше 0,5
   ck_assert_int_eq(code, 0);
 }
 END_TEST
-
 
 Suite *suite_from_decimal_to_float(void) {
   Suite *s = suite_create("s21_from_decimal_to_float");
@@ -297,7 +296,6 @@ Suite *suite_from_decimal_to_float(void) {
   tcase_add_test(tc, s21_from_decimal_to_float_15);
   tcase_add_test(tc, s21_from_decimal_to_float_16);
   tcase_add_test(tc, s21_from_decimal_to_float_17);
-
 
   suite_add_tcase(s, tc);
   return s;

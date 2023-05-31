@@ -1573,7 +1573,6 @@
 // }
 // END_TEST
 
-
 // START_TEST(s21_test_decimal_sub_simple_11) {
 //   s21_decimal c = {{100, 0, 0, ~(INT_MAX)}};
 //   s21_decimal d = {{100, 0, 0, ~(INT_MAX)}};
@@ -1583,7 +1582,6 @@
 //   ck_assert_int_eq(add, 0);
 // }
 // END_TEST
-
 
 START_TEST(sub1) {
   s21_decimal src1, src2, res_od;
@@ -1956,7 +1954,6 @@ START_TEST(sub16) {
 }
 END_TEST
 
-
 Suite *suite_sub(void) {
   Suite *s;
   TCase *tc;
@@ -2034,7 +2031,6 @@ Suite *suite_sub(void) {
   // tcase_add_test(tc, s21_sub_max_34);
   // tcase_add_test(tc, s21_sub_max_35);
 
-
   tcase_add_test(tc, sub1);
   tcase_add_test(tc, sub2);
   tcase_add_test(tc, sub3);
@@ -2051,7 +2047,6 @@ Suite *suite_sub(void) {
   tcase_add_test(tc, sub14);
   tcase_add_test(tc, sub15);
   tcase_add_test(tc, sub16);
-
 
   suite_add_tcase(s, tc);
   return s;

@@ -16,9 +16,7 @@ void setBit(s21_decimal *d, int i) {
   unsigned int mask = 1u << (i % 32);
   // получили маску с 1 на i позиции и 0 на остальных
 
-  // printf("SETBIt DO %X\n", d->bits[i/32]);
   d->bits[i / 32] |= mask;
-  // printf("SETBIT POSLE %X\n", d->bits[i/32]);
 }
 
 void setScale(s21_decimal *d, int scale) {
@@ -40,25 +38,20 @@ int getScale(s21_decimal d) {
   int scale = 0;
   int j = 7;
   for (int i = 119; i >= 112; i--) {
-    if (getBit(d, i))
-      scale += pow(2, j);
+    if (getBit(d, i)) scale += pow(2, j);
     j--;
   }
   return scale;
 }
 
-
 int getBinExpD(double f) {
   int i = 11, res = -1023;
   unsigned long long fbits = *((unsigned long long *)&f);
   unsigned long long mask = 1ull << 62;
-  // printf("*");
   for (; i > 0; mask >>= 1) {
     i--;
     res += !!(fbits & mask) * pow(2, i);
-    // printf("%d", !!(fbits&mask));
   }
-  // printf("\n");
   return res;
 }
 
@@ -79,26 +72,25 @@ void _double_to_dec(double dinp, s21_decimal *dst) {
 int get_scale_n_right_form(int *scale, double dinp, double *rf,
                            s21_decimal *dst) {
   double inp = dinp;
-  int p = 0; //кол-во цифр перед точкой
+  int p = 0;  //кол-во цифр перед точкой
   while (inp / 10. > 1e-1) {
     inp /= 10.;
     p++;
   }
-  double shift = p - 7; //перед точкой сколько осталось до 7
-  if (shift > 0) { //часть до точки длиннее 7,обрезаем
-    for (int i = 0; i < shift; i++)
-      dinp /= 10;
-    dinp = round(dinp);        //округляем обрезанное
-    _double_to_dec(dinp, dst); //переписать обрезанное в дец
+  double shift = p - 7;  //перед точкой сколько осталось до 7
+  if (shift > 0) {  //часть до точки длиннее 7,обрезаем
+    for (int i = 0; i < shift; i++) dinp /= 10;
+    dinp = round(dinp);         //округляем обрезанное
+    _double_to_dec(dinp, dst);  //переписать обрезанное в дец
     int tshift = shift;
-    _mult_10_dec(dst, &tshift); //*10 децимал - нет потери точности
-  } else {        //значит часть до точки короче 7
-    int i, j = 0; // j (подсчет общего сдвига),
-    int limit_mult10 = 7; //зацепляем 28 символов после точки
+    _mult_10_dec(dst, &tshift);  //*10 децимал - нет потери точности
+  } else {         //значит часть до точки короче 7
+    int i, j = 0;  // j (подсчет общего сдвига),
+    int limit_mult10 = 7;  //зацепляем 28 символов после точки
     for (; !(int)dinp && j < 28; dinp *= 10, j++) {
       *(scale) += 1;
     }
-    if (*scale > 0) { // число по длине меньше 1, сдвигали до головы
+    if (*scale > 0) {  // число по длине меньше 1, сдвигали до головы
       int can_shift = 28;
       can_shift -= j;
       i = 1;
@@ -107,22 +99,22 @@ int get_scale_n_right_form(int *scale, double dinp, double *rf,
       } else if (can_shift < 0) {
         limit_mult10 = 0;
       }
-    } else { //если перед точкой уже есть до 6 цифр
+    } else {  //если перед точкой уже есть до 6 цифр
       i = p;
-    } // дальше в цикле будем крутиться меньше
+    }  // дальше в цикле будем крутиться меньше
     //умножение на 10 до правильного вида
     while (i < limit_mult10) {
       dinp *= 10;
       i++;
       *(scale) += 1;
     }
-    dinp = round(dinp); //могут на конце появиться 0
+    dinp = round(dinp);  //могут на конце появиться 0
     while ((int)dinp % 10 == 0 && (int)dinp) {
       dinp /= 10;
       *scale -= 1;
     }
-    if (*scale < 0) {   //если число c 0 на конце сразу
-      *scale = -*scale; //цикл выше их уничтожит
+    if (*scale < 0) {    //если число c 0 на конце сразу
+      *scale = -*scale;  //цикл выше их уничтожит
       while (*scale) {
         dinp *= 10;
         *scale = *scale - 1;
@@ -133,30 +125,24 @@ int get_scale_n_right_form(int *scale, double dinp, double *rf,
   return shift;
 }
 
-
 int getSign(s21_decimal src) { return getBit(src, 127); }
-
 
 int getFirstNotZeroIndex(s21_decimal src) {
   int i = 95;
   int found = 0;
   while (i >= 0 && !found) {
-    if (getBit(src, i))
-      found = 1;
+    if (getBit(src, i)) found = 1;
     i--;
   }
   return i;
 }
 
-
-
 //применяется для сложения без учета scale
 int add_dec_no_scale(s21_decimal value_1, s21_decimal value_2,
                      s21_decimal *result) {
-  int ret_val = 0; // 0 ok 1 overflow
-  int temp = 0;    // для того чтобы перненосить 1
-  for (int i = 0; i < 4; i++)
-    result->bits[i] = 0;
+  int ret_val = 0;  // 0 ok 1 overflow
+  int temp = 0;     // для того чтобы перненосить 1
+  for (int i = 0; i < 4; i++) result->bits[i] = 0;
   for (int i = 0; i <= 95; i++) {
     int top = getBit(value_1, i);
     int bot = getBit(value_2, i);
@@ -166,30 +152,26 @@ int add_dec_no_scale(s21_decimal value_1, s21_decimal value_2,
       else
         temp = 1;
     } else if (top || bot) {
-      if (!temp)
-        setBit(result, i);
+      if (!temp) setBit(result, i);
     } else if (temp) {
-    // } else if (!top && !bot && temp) {
+      // } else if (!top && !bot && temp) {
       setBit(result, i);
       temp = 0;
     }
   }
-  if (temp)
-    ret_val = 1;
+  if (temp) ret_val = 1;
   return ret_val;
 }
 
 //функция не меняет scale
 int shift_left_dec(s21_decimal d, s21_decimal *r, int IndexShift) {
-  int rv = 0; // 0 ok 1 of
+  int rv = 0;  // 0 ok 1 of
   if (r) {
-    for (int i = 0; i < 4; i++)
-      r->bits[i] = 0;
+    for (int i = 0; i < 4; i++) r->bits[i] = 0;
     int fnz = getFirstNotZeroIndex(d);
     if (fnz + IndexShift <= 95) {
       for (int i = 0; i <= fnz + 1; i++) {
-        if (getBit(d, i))
-          setBit(r, i + IndexShift);
+        if (getBit(d, i)) setBit(r, i + IndexShift);
       }
     } else {
       rv = 1;
@@ -199,63 +181,57 @@ int shift_left_dec(s21_decimal d, s21_decimal *r, int IndexShift) {
 }
 
 void _cpy_dec(s21_decimal d, s21_decimal *r) {
-  if(r) {
-    for(int i = 0; i < 4; i++)
-      r->bits[i]= d.bits[i];
+  if (r) {
+    for (int i = 0; i < 4; i++) r->bits[i] = d.bits[i];
   }
 }
 
-int _mult_10_dec(s21_decimal *d, int* shift10) {
+int _mult_10_dec(s21_decimal *d, int *shift10) {
   int rv = 0;
   //нужно сделать так, чтобы результат до ошибки оставался
   //запоминать сделанный shift
   s21_decimal tmp;
   while (*shift10 && !rv) {
     _cpy_dec(*d, &tmp);
-    s21_decimal slv3; //на 3
+    s21_decimal slv3;  //на 3
     int err = shift_left_dec(tmp, &slv3, 3);
     if (!err) {
-      s21_decimal slv1; //сдвинутое на 1
+      s21_decimal slv1;  //сдвинутое на 1
       shift_left_dec(tmp, &slv1, 1);
       add_dec_no_scale(slv1, slv3, d);
-      *shift10=*shift10-1;
+      *shift10 = *shift10 - 1;
     } else {
       rv = 1;
     }
   }
-  return rv; // 0 ok/// 1 значит мы не можем сдвинуть нужное кол-во раз
+  return rv;  // 0 ok/// 1 значит мы не можем сдвинуть нужное кол-во раз
 }
-
 
 int s21_from_float_to_decimal(float src, s21_decimal *dst) {
   int rv = 0;
   if (dst && !(src == s21_INFINITY || src == -s21_INFINITY || src != src)) {
-    // for (int i = 0; i < 4; i++)
-    //   dst->bits[i] = 0;
     memset(dst, 0, sizeof(s21_decimal));
     int scale = 0;
-    if(src!=0) {
-        int neg = 0;
-        double rf = src;
-        if (rf < 0) {
-          neg = 1;
-          rf = -rf;
-        }
-        if(rf>= 1E-28 && rf < 79228162514264337593543950335.0f) {
-          int binexp = getBinExpD(rf);
-          if (binexp <= 95) {
-            int shift = get_scale_n_right_form(&scale, rf, &rf, dst);
-            setScale(dst, scale);
-            if (shift <= 0)
-              _double_to_dec(rf, dst);
-            if (neg)
-              setBit(dst, 127);
-          } else {
-            rv = 1;
-          }
+    if (src != 0) {
+      int neg = 0;
+      double rf = src;
+      if (rf < 0) {
+        neg = 1;
+        rf = -rf;
+      }
+      if (rf >= 1E-28 && rf < 79228162514264337593543950335.0f) {
+        int binexp = getBinExpD(rf);
+        if (binexp <= 95) {
+          int shift = get_scale_n_right_form(&scale, rf, &rf, dst);
+          setScale(dst, scale);
+          if (shift <= 0) _double_to_dec(rf, dst);
+          if (neg) setBit(dst, 127);
         } else {
           rv = 1;
         }
+      } else {
+        rv = 1;
+      }
     }
 
   } else {
@@ -263,7 +239,6 @@ int s21_from_float_to_decimal(float src, s21_decimal *dst) {
   }
   return rv;
 }
-
 
 int s21_from_decimal_to_int(s21_decimal src, int *dst) {
   int ret_val = 1;
@@ -293,7 +268,6 @@ int s21_from_decimal_to_int(s21_decimal src, int *dst) {
   return ret_val;
 }
 
-
 int s21_from_decimal_to_float(s21_decimal src, float *dst) {
   int ret_val = 1;
   if (dst) {
@@ -301,7 +275,7 @@ int s21_from_decimal_to_float(s21_decimal src, float *dst) {
     long double ldst = 0;
     for (int i = 0; i < 96; i++) {
       if (getBit(src, i)) {
-        ldst += pow(2, i); //во флот прибавляем 2 в степени i
+        ldst += pow(2, i);  //во флот прибавляем 2 в степени i
       }
     }
     //пока scale не 0 делим на 10
@@ -310,8 +284,7 @@ int s21_from_decimal_to_float(s21_decimal src, float *dst) {
       ldst /= 10;
       scale--;
     }
-    if (getSign(src))
-      ldst = -ldst;
+    if (getSign(src)) ldst = -ldst;
     *dst = ldst;
     ret_val = 0;
   }
@@ -321,19 +294,15 @@ int s21_from_decimal_to_float(s21_decimal src, float *dst) {
 int s21_from_int_to_decimal(int src, s21_decimal *dst) {
   int ret_val = 1;
   if (dst) {
-    // for (int i = 0; i < 4; i++)
-    //   dst->bits[i] = 0;
-    memset(dst, 0, sizeof(s21_decimal)); 
+    memset(dst, 0, sizeof(s21_decimal));
     int neg = 0;
     if (src < 0) {
       neg = 1;
       src = -src;
     }
     dst->bits[0] = src;
-    if (neg)
-      setBit(dst, 127);
+    if (neg) setBit(dst, 127);
     ret_val = 0;
-
   }
   return ret_val;
 }
@@ -428,7 +397,6 @@ int s21_div(s21_decimal divident, s21_decimal divisor, s21_decimal *result) {
     s21_setsign(result, resultSign);
   }
 
-
   if (s21_check_inf(*result)) {
     ret = 1;
     if (s21_getsign(&divident) != s21_getsign(&divisor)) ret = 2;
@@ -469,7 +437,6 @@ int s21_mul(s21_decimal number_1, s21_decimal number_2, s21_decimal *res) {
     // то если позволяет скейл, привести в нужный диапазон
     // и попробовать умножить снова
 
-    // while (res->value_type != s21_usual &&
     while (s21_check_inf(*res) &&
            (s21_get_scale(&number_1) > 0 || s21_get_scale(&number_2) > 0)) {
       // более точное число поделим на 10, если позволяет скейл
@@ -587,7 +554,6 @@ int s21_add(s21_decimal value1, s21_decimal value2, s21_decimal *res) {
   return ret;
 }
 
-
 int s21_sub(s21_decimal number_1, s21_decimal number_2, s21_decimal *res) {
   int ret = 0;
   s21_set0bits(res);
@@ -631,8 +597,6 @@ int s21_sub(s21_decimal number_1, s21_decimal number_2, s21_decimal *res) {
       }
     }
   }
-  //   if (res->value_type == s21_infinity) ret = 1;
-  //   if (res->value_type == s21_neg_infinity) ret = 2;
   if (s21_check_inf(*res)) {
     ret = 1;
     // if (s21_getsign(res)) ret = 2;

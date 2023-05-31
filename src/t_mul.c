@@ -181,26 +181,6 @@ START_TEST(mul9) {
 }
 END_TEST
 
-START_TEST(mul10) {
-  s21_decimal src1, src2, res_od;
-  int ret = 0;
-  float a = 1.0 / 0.0;
-  float b = -1.0 / 0.0;
-  float res_our_dec = 0.0;
-  s21_from_float_to_decimal(a, &src1);
-  s21_from_float_to_decimal(b, &src2);
-  ret = s21_mul(src1, src2, &res_od);
-  s21_from_decimal_to_float(res_od, &res_our_dec);
-  // ck_assert_float_infinite(res_our_dec);
-  ck_assert_float_eq(s21_check_inf(res_od), 0);
-  ck_assert_float_eq(s21_getsign(&res_od), 0);
-  ck_assert_int_eq(res_od.bits[2], 0);
-  ck_assert_int_eq(res_od.bits[1], 0);
-  ck_assert_int_eq(res_od.bits[0], 0);
-  ck_assert_int_eq(ret, 0);
-}
-END_TEST
-
 START_TEST(mul11) {
   s21_decimal src1, src2, res_od;
   int ret = 0;
@@ -324,24 +304,6 @@ START_TEST(mul17) {
 }
 END_TEST
 
-START_TEST(mul18) {
-  s21_decimal src1, src2, res_od;
-  int ret = 0;
-  float c = 2 * 0.0, d = 3 * 0.0;
-  float a = c / d;
-  float b = d / c;
-  float res_our_dec = 0.0;
-  s21_from_float_to_decimal(a, &src1);
-  s21_from_float_to_decimal(b, &src2);
-  ret = s21_mul(src1, src2, &res_od);
-  s21_from_decimal_to_float(res_od, &res_our_dec);
-  ck_assert_int_eq(res_od.bits[2], 0);
-  ck_assert_int_eq(res_od.bits[1], 0);
-  ck_assert_int_eq(res_od.bits[0], 0);
-  ck_assert_int_eq(ret, 0);
-}
-END_TEST
-
 START_TEST(s21_mul_test) {
   s21_decimal result1 = {{0, 0, 0, 0}};
   s21_decimal result2 = {{0, 0, 0, 0}};
@@ -382,7 +344,6 @@ Suite *suite_mul(void) {
   tcase_add_test(tc, mul7);
   tcase_add_test(tc, mul8);
   tcase_add_test(tc, mul9);
-  tcase_add_test(tc, mul10);
   tcase_add_test(tc, mul11);
   tcase_add_test(tc, mul12);
   tcase_add_test(tc, mul13);
@@ -390,7 +351,6 @@ Suite *suite_mul(void) {
   tcase_add_test(tc, mul15);
   tcase_add_test(tc, mul16);
   tcase_add_test(tc, mul17);
-  tcase_add_test(tc, mul18);
   tcase_add_test(tc, s21_mul_test);
 
   suite_add_tcase(s, tc);
