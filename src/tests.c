@@ -3,8 +3,6 @@
 #include <limits.h>
 #include <math.h>
 
-#include "s21_decimal.h"
-
 int main() {
   int nf;
   SRunner *sr;

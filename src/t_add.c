@@ -1,4 +1,4 @@
-#include "s21_decimal.h"
+#include "tests.h"
 
 START_TEST(add_test_1) {
   int num1 = 42;

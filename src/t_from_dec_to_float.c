@@ -1,4 +1,4 @@
-#include "s21_decimal.h"
+#include "tests.h"
 
 #define eps 1e-32
 START_TEST(s21_from_decimal_to_float_1) {

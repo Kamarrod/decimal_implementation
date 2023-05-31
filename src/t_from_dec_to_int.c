@@ -1,4 +1,4 @@
-#include "s21_decimal.h"
+#include "tests.h"
 
 START_TEST(s21_from_decimal_to_int_1) {
   s21_decimal src;

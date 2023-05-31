@@ -2,6 +2,7 @@
 #define S21_TESTS_H
 
 #include "check.h"
+#include "s21_decimal.h"
 
 Suite *test_from_float_to_decimal(void);
 Suite *suite_from_decimal_to_float(void);

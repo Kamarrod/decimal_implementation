@@ -1,4 +1,4 @@
-#include "s21_decimal.h"
+#include "tests.h"
 
 START_TEST(mul1) {
   s21_decimal src1, src2, res_od;

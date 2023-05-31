@@ -1,4 +1,4 @@
-#include "s21_decimal.h"
+#include "tests.h"
 
 START_TEST(is_equal_same_numbers) {
   s21_decimal first = {

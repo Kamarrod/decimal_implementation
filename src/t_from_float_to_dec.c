@@ -1,4 +1,4 @@
-#include "s21_decimal.h"
+#include "tests.h"
 
 START_TEST(s21_float_000) {
   float inp = 1. / 0.;
