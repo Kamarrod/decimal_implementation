@@ -15,15 +15,15 @@ int convert(s21_decimal value) {
 }
 
 void s21_truncate_buf(s21_decimal *buf, int exp) {
-  unsigned long long u_num;  // 18,446,744,073,709,551,615
-  int tmp_int = 0;
   for (int i = 0; i < exp; i++) {
+    unsigned long long u_num;
     u_num = buf->bits[2];
     int j = 2;
     for (; j >= 0; j--) {
       if (j == 0) {
         buf->bits[j] = u_num / 10;
       } else {
+        int tmp_int = 0;
         tmp_int = u_num % 10;  // запомнили первый разряд который мы отнимаем
         buf->bits[j] = u_num / 10;  // получили в последнем инте валуе получили
                                     // последний инт резалта
@@ -39,7 +39,6 @@ int s21_truncate(s21_decimal value, s21_decimal *result) {
   if (result) {
     int exp = convert(value);
     int sign = getSign(value);
-    // int sign_op = test_bit(value.bits[3], 31);
     if (exp != 0) {
         s21_decimal buf = {0};
         buf = value;
@@ -58,7 +57,7 @@ int s21_truncate(s21_decimal value, s21_decimal *result) {
 
 int s21_round(s21_decimal value, s21_decimal *result) {
     int rv = 1;
-    if(result && !s21_check_inf(value) && !s21_check_inf(value))
+    if(result && !s21_check_inf(value))
     {
         int sign = getSign(value);
         if (getScale(value) == 0) {
@@ -83,20 +82,10 @@ int s21_round(s21_decimal value, s21_decimal *result) {
                   s21_add(resultCopy, one, result);
                 }
         }
-          // s21_decimal sub = {{0, 0, 0, 0}};
-          // if (sign) {
-          //   s21_sub(*result, copy, &sub);
-          // } else {
-          //   s21_sub(copy, *result, &sub);
-          // }
-          // if(s21_is_greater_or_equal(sub, half_one) == 1) {
-          //     s21_decimal resultCopy = {{result->bits[0],  result->bits[1], result->bits[2], result->bits[3]}};
-          //     s21_sub(resultCopy, one, result);
-          //   }
         }
         rv = 0;
     }
-    if (result && (s21_check_inf(value) || -s21_check_inf(value))) {
+    if (result && (s21_check_inf(value))) {
         *result = value;
         rv = 0;
     }
@@ -106,7 +95,7 @@ int s21_round(s21_decimal value, s21_decimal *result) {
 int s21_floor(s21_decimal value, s21_decimal *result) {
     int rv = 1;
     if (result) {
-        if (s21_check_inf(value) || -s21_check_inf(value)) {
+        if (s21_check_inf(value)) {
             *result = value;
         } else {
             int scale = getScale(value);
